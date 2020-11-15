@@ -16,7 +16,7 @@
 
 ▸ **ensure**\<T>(`object`: T, `typings`: {}): [keyof T, any] \| null
 
-*Defined in [src/util/ensure.ts:13](https://github.com/norviah/config/blob/4c1b602/src/util/ensure.ts#L13)*
+*Defined in [src/util/ensure.ts:13](https://github.com/norviah/config/blob/641e50d/src/util/ensure.ts#L13)*
 
 When JSON is imported as an object via a require import, it simply imports
 that object as it is. The goal of this function is to ensure that the

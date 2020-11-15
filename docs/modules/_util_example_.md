@@ -17,7 +17,7 @@
 
 ▸ **example**\<T>(`typings`: {}): Record\<string, any>
 
-*Defined in [src/util/example.ts:46](https://github.com/norviah/config/blob/4c1b602/src/util/example.ts#L46)*
+*Defined in [src/util/example.ts:46](https://github.com/norviah/config/blob/641e50d/src/util/example.ts#L46)*
 
 If a config doesn't exist, this function is used to create an example using
 the typings object that reference the interface.
@@ -44,7 +44,7 @@ ___
 
 ▸ **value**\<T>(`typings`: {}, `key`: keyof T): undefined \| string \| string[]
 
-*Defined in [src/util/example.ts:13](https://github.com/norviah/config/blob/4c1b602/src/util/example.ts#L13)*
+*Defined in [src/util/example.ts:13](https://github.com/norviah/config/blob/641e50d/src/util/example.ts#L13)*
 
 Generates a value representing the type for the given key to use within an
 example object with the given generic type T as a base. This function
