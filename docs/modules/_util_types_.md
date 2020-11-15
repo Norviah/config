@@ -20,7 +20,7 @@
 
 ▸ **check**(`element`: any, `type`: [Types](_types_types_.md#types) \| [Types](_types_types_.md#types)[]): boolean
 
-*Defined in [src/util/types.ts:64](https://github.com/norviah/config/blob/4c1b602/src/util/types.ts#L64)*
+*Defined in [src/util/types.ts:64](https://github.com/norviah/config/blob/641e50d/src/util/types.ts#L64)*
 
 Determines if the given element is any of the desired types.
 
@@ -41,7 +41,7 @@ Determines if the element's type exists within the list.
 
 ▪ `Const` **types**: object
 
-*Defined in [src/util/types.ts:8](https://github.com/norviah/config/blob/4c1b602/src/util/types.ts#L8)*
+*Defined in [src/util/types.ts:8](https://github.com/norviah/config/blob/641e50d/src/util/types.ts#L8)*
 
 As this project uses a config object to set values, and TypeScript doesn't
 determine typings at run time, we'll be using this set to determine if a

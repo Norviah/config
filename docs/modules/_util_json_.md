@@ -16,7 +16,7 @@
 
 ▸ **json**\<T>(`path`: string): T \| null
 
-*Defined in [src/util/json.ts:8](https://github.com/norviah/config/blob/4c1b602/src/util/json.ts#L8)*
+*Defined in [src/util/json.ts:8](https://github.com/norviah/config/blob/641e50d/src/util/json.ts#L8)*
 
 Imports the given JSON path as an object.
 

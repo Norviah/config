@@ -16,7 +16,7 @@
 
 ▸ **load**\<T>(`typings`: {}, `options?`: [Options](../interfaces/_types_options_.options.md)\<T>): T
 
-*Defined in [src/util/load.ts:27](https://github.com/norviah/config/blob/4c1b602/src/util/load.ts#L27)*
+*Defined in [src/util/load.ts:27](https://github.com/norviah/config/blob/641e50d/src/util/load.ts#L27)*
 
 Imports and returns the config file as an object based off of the given interface.
 
