@@ -1,0 +1,44 @@
+{
+  "files": ["package.json"],
+  "plugins": {
+    "prerelease": {
+      "deleting existing build": {
+        "plugin": "bumped-terminal",
+        "command": "/bin/rm -rf lib"
+      },
+      "building": {
+        "plugin": "bumped-terminal",
+        "command": "npm run build:src"
+      }
+    },
+    "postrelease": {
+      "deleting documentation": {
+        "plugin": "bumped-terminal",
+        "command": "/bin/rm -rf ./docs"
+      },
+      "building documentation": {
+        "plugin": "bumped-terminal",
+        "command": "./node_modules/typedoc/bin/typedoc --plugin typedoc-plugin-markdown && sed -i '' '4d;5d' ./docs/README.md"
+      },
+      "comitting documentation": {
+        "plugin": "bumped-terminal",
+        "command": "git add docs && git commit -m 'docs: generate documentation'"
+      },
+      "generating changelong": {
+        "plugin": "bumped-changelog"
+      },
+      "comitting new version": {
+        "plugin": "bumped-terminal",
+        "command": "git add CHANGELOG.md package.json && git commit -m 'chore(release): v$newVersion'"
+      },
+      "tagging release": {
+        "plugin": "bumped-terminal",
+        "command": "git tag 'v$newVersion' && git push --follow-tags origin master"
+      },
+      "publishing to npm": {
+        "plugin": "bumped-terminal",
+        "command": "npm publish"
+      }
+    }
+  }
+}
