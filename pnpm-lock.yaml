@@ -1,7 +1,6 @@
 dependencies:
   '@norviah/logger': 2.0.1
   app-root-path: 3.0.0
-  uninstall: 0.0.0
 devDependencies:
   '@types/app-root-path': 1.2.4
   '@types/mocha': 8.0.4
@@ -3854,10 +3853,6 @@ packages:
     optional: true
     resolution:
       integrity: sha512-btvv/baMqe7HxP7zJSF7Uc16h1mSfuuSplT0/qdjxseesDU+yYzH33eHBH+eMdeRXwujXspaCTooWHQVVBh09w==
-  /uninstall/0.0.0:
-    dev: false
-    resolution:
-      integrity: sha1-ED5uN+nFLshXVCzSWQI9ccej+ys=
   /unique-string/2.0.0:
     dependencies:
       crypto-random-string: 2.0.0
@@ -4141,4 +4136,3 @@ specifiers:
   typedoc: ^0.19.2
   typedoc-plugin-markdown: ^3.0.11
   typescript: ^4.0.5
-  uninstall: ^0.0.0
