@@ -18,7 +18,7 @@
       },
       "building documentation": {
         "plugin": "bumped-terminal",
-        "command": "./node_modules/typedoc/bin/typedoc --plugin typedoc-plugin-markdown && sed -i '' '4d;5d' ./docs/README.md"
+        "command": "./node_modules/typedoc/bin/typedoc --plugin typedoc-plugin-markdown && sed -i '4d;5d' ./docs/README.md"
       },
       "comitting documentation": {
         "plugin": "bumped-terminal",
