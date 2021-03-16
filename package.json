@@ -12,7 +12,7 @@
     "lib": "lib"
   },
   "scripts": {
-    "build:src": "./node_modules/typescript/bin/tsc",
+    "build": "./node_modules/typescript/bin/tsc",
     "publish:patch": "./node_modules/bumped/bin/index.js release patch",
     "publish:minor": "./node_modules/bumped/bin/index.js release minor",
     "publish:major": "./node_modules/bumped/bin/index.js release major",
