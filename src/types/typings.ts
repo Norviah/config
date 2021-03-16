@@ -1,9 +1,12 @@
 import { Types } from './types';
+import { Strings } from './typescript/strings';
+
+type Values = Strings<Types> | Strings<Types>[];
 
 /**
- * This interface represents the list of keys that is wanted within a config and
- * the desired type of each key.
+ * As TypeScript only exists within compile time, we'll need a type to reference
+ * desired types of a given interface within runtime.
  */
-export interface Typings {
-  [key: string]: Types | Types[];
-}
+export type Typings<T extends Record<string, any>> = {
+  [K in keyof Required<T>]: T[K] extends Record<string, any> ? Typings<T[K]> : Values;
+};
