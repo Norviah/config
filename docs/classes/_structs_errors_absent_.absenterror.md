@@ -30,7 +30,7 @@
 
 *Overrides [ConfigError](_structs_error_.configerror.md).[constructor](_structs_error_.configerror.md#constructor)*
 
-*Defined in [src/structs/errors/absent.ts:4](https://github.com/norviah/config/blob/641e50d/src/structs/errors/absent.ts#L4)*
+*Defined in [src/structs/errors/absent.ts:4](https://github.com/Norviah/config/blob/54727f7/src/structs/errors/absent.ts#L4)*
 
 Represents when, within the config, a key isn't set.
 
@@ -53,7 +53,7 @@ Name | Type | Description |
 
 *Overrides void*
 
-*Defined in [src/structs/error.ts:17](https://github.com/norviah/config/blob/641e50d/src/structs/error.ts#L17)*
+*Defined in [src/structs/error.ts:17](https://github.com/Norviah/config/blob/54727f7/src/structs/error.ts#L17)*
 
 ___
 
@@ -65,7 +65,7 @@ ___
 
 *Overrides void*
 
-*Defined in [src/structs/error.ts:8](https://github.com/norviah/config/blob/641e50d/src/structs/error.ts#L8)*
+*Defined in [src/structs/error.ts:8](https://github.com/Norviah/config/blob/54727f7/src/structs/error.ts#L8)*
 
 The name of the Error, we'll have the name of this error, and the names of
 child classes, to have a '[CONFIG]' before the name.
@@ -80,7 +80,7 @@ ___
 
 *Overrides void*
 
-*Defined in [src/structs/error.ts:15](https://github.com/norviah/config/blob/641e50d/src/structs/error.ts#L15)*
+*Defined in [src/structs/error.ts:15](https://github.com/Norviah/config/blob/54727f7/src/structs/error.ts#L15)*
 
 When debugging errors, a stacktrace is extremely useful as it presents the
 steps through execution that led to an error, however, errors thrown via

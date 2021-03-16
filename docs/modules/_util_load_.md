@@ -14,25 +14,25 @@
 
 ### load
 
-▸ **load**\<T>(`typings`: {}, `options?`: [Options](../interfaces/_types_options_.options.md)\<T>): T
+▸ **load**\<T>(`typings`: [Typings](_types_typings_.md#typings)\<T>, `options?`: [Options](../interfaces/_types_options_.options.md)\<T>): T
 
-*Defined in [src/util/load.ts:27](https://github.com/norviah/config/blob/641e50d/src/util/load.ts#L27)*
+*Defined in [src/util/load.ts:26](https://github.com/Norviah/config/blob/54727f7/src/util/load.ts#L26)*
 
-Imports and returns the config file as an object based off of the given interface.
+Imports and returns the config file as an instance of the given inteface.
 
 #### Type parameters:
 
-Name |
------- |
-`T` |
+Name | Type |
+------ | ------ |
+`T` | Record\<string, any> |
 
 #### Parameters:
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`typings` | {} | An object referencing each key within the desired interface, the value of each key should represent the desired value of the key.s |
+`typings` | [Typings](_types_typings_.md#typings)\<T> | An object referencing desired types for each key in T. |
 `options?` | [Options](../interfaces/_types_options_.options.md)\<T> | Optional options. |
 
 **Returns:** T
 
-The config file saved to disk as an instance of the given interface.
+An instance of T.

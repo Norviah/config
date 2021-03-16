@@ -18,9 +18,9 @@
 
 • `Const` **config**: string = join(configDir, 'config.json')
 
-*Defined in [src/util/paths.ts:17](https://github.com/norviah/config/blob/641e50d/src/util/paths.ts#L17)*
+*Defined in [src/util/paths.ts:17](https://github.com/Norviah/config/blob/54727f7/src/util/paths.ts#L17)*
 
-Represents the absolute path for the config file.
+The absolute path for the config file.
 
 ___
 
@@ -28,9 +28,9 @@ ___
 
 • `Const` **configDir**: string = join(root, 'config')
 
-*Defined in [src/util/paths.ts:12](https://github.com/norviah/config/blob/641e50d/src/util/paths.ts#L12)*
+*Defined in [src/util/paths.ts:12](https://github.com/Norviah/config/blob/54727f7/src/util/paths.ts#L12)*
 
-Represents the absolute path for the config directory.
+The absolute path for the config directory.
 
 ___
 
@@ -38,6 +38,6 @@ ___
 
 • `Const` **root**: string = path
 
-*Defined in [src/util/paths.ts:7](https://github.com/norviah/config/blob/641e50d/src/util/paths.ts#L7)*
+*Defined in [src/util/paths.ts:7](https://github.com/Norviah/config/blob/54727f7/src/util/paths.ts#L7)*
 
-Represents the absolute path for this project's root directory.
+The absolute path for the project's root.

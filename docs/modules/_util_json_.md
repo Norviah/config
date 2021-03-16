@@ -14,24 +14,18 @@
 
 ### json
 
-▸ **json**\<T>(`path`: string): T \| null
+▸ **json**(`path`: string): Record\<string, any> \| null
 
-*Defined in [src/util/json.ts:8](https://github.com/norviah/config/blob/641e50d/src/util/json.ts#L8)*
+*Defined in [src/util/json.ts:8](https://github.com/Norviah/config/blob/54727f7/src/util/json.ts#L8)*
 
-Imports the given JSON path as an object.
-
-#### Type parameters:
-
-Name |
------- |
-`T` |
+Imports the given JSON path as an object, if the path exists.
 
 #### Parameters:
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`path` | string | The path to import. |
+`path` | string | The path for the JSON file. |
 
-**Returns:** T \| null
+**Returns:** Record\<string, any> \| null
 
-The given path as an object, or null if it doesn't exist.
+The JSON object.
