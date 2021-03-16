@@ -8,6 +8,6 @@ export class AbsentError extends ConfigError {
    * @param type The correct type for the given key.
    */
   constructor(key: string, type: string | Types) {
-    super(`The key '${key}' is missing within the config file, it should be of type '${type}'.`);
+    super(`The key '${key}' is missing within the config file, it should be of type \`${type}\`.`);
   }
 }

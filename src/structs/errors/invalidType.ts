@@ -8,8 +8,6 @@ export class InvalidTypeError extends ConfigError {
    * @param type The correct type for the key.
    */
   constructor(key: string, type: string | Types) {
-    super(
-      `The key '${key}' within the config file should be of type '${type}', please fix this value and run this program again.`
-    );
+    super(`The key '${key}' within the config file should be of type \`${type}\`, please fix this value and run this program again.`);
   }
 }

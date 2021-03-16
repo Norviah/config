@@ -6,8 +6,6 @@ export class MissingError extends ConfigError {
    * @param path The config's path.
    */
   constructor(path: string) {
-    super(
-      `A config file doesn't exist at '${path}', so one has been created for you. Please fill these values using the appropriate type.`
-    );
+    super(`A config file doesn't exist at '${path}', so one has been created for you. Please fill these values using the appropriate type.`);
   }
 }
