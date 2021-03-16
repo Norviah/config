@@ -8,5 +8,5 @@ type Values = Strings<Types> | Strings<Types>[];
  * desired types of a given interface within runtime.
  */
 export type Typings<T extends Record<string, any>> = {
-  [K in keyof Required<T>]: T[K] extends Record<string, any> ? Typings<T[K]> : Values;
+  [K in keyof Required<T>]: T[K] extends Record<string, unknown> ? Typings<T[K]> : Values;
 };
