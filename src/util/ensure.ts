@@ -1,32 +1,80 @@
+import { Result } from '../types/result';
 import { Types } from '../types/types';
-import { check } from '../util/types';
+import { Typings } from '../types/typings';
+import { Strings } from '../types/typescript/strings';
+
+import { validate } from './validate';
 
 /**
- * When JSON is imported as an object via a require import, it simply imports
- * that object as it is. The goal of this function is to ensure that the
- * imported object has the correct type for each key using the typings object
- * which is based off of an interface that can be used at runtime.
- * @param  object  The imported JSON object to check.
- * @param  typings The object which states each desired key and types.
- * @return         Either null to represent that types are valid, or a tuple to represent the key that has been set to an incorrect value.
+ * Recursivelies determines if every property within the given object suffices
+ * to the desired types determined by the typings object.
+ * @param  object  The object to ensure.
+ * @param  typings References the desired type for each property in the object.
+ * @param  prop    Represents the current property this method is working on.
+ * @return         If a property within the object isn't the correct type, an
+ *                 object referencing the: key, value, and desired type is
+ *                 returned, otherwise, undefined if all keys are properly set.
  */
-export function ensure<T>(object: T, typings: { [key in keyof Required<T>]: Types | Types[] }): [keyof T, any] | null {
+export function ensure<T extends Record<string, any>>(object: Record<keyof T, any>, typings: Typings<T>, prop?: (keyof T)[]): Result<T> | Result<T[any]> | undefined {
   // First, we'll get a list of keys that are desired within the config file.
-  const keys: (keyof T)[] = Object.keys(typings) as (keyof T)[];
+  const keys = Object.keys(typings) as (keyof T)[];
 
-  // With a list of keys, we can determine the desired types, by using the
-  // typings parameter, and the actual value set within the config, by using
-  // the object parameter.
+  // As we have a list of desired keys, we can determine the desired types for
+  // each value by validating the set value using the typings object to
+  // determine the desired type.
 
-  // For every key, we'll check to see if the correct type has been set. If an
-  // incorrect type is set, we'll return a tuple representing the key itself
-  // and the value that was set.
+  // For every key, we'll determine if the correct type has been set. If a
+  // incorrect type has been set, we'll return a tuple representing the key and
+  // the value it has been set to.
 
-  for (const key of keys) {
-    if (!check(object[key], typings[key])) {
-      return [key, object[key]];
+  let result: Result<T> | Result<T[any]> | undefined;
+
+  while (keys.length > 0 || !result) {
+    // For every key within the desired typings object, we'll check it's type
+    // within the given object.
+    const key: keyof T | undefined = keys.shift();
+
+    const types = (typeof typings[key as string] === 'object' ? null : Array.isArray(typings[key as string]) ? typings[key as string] : [typings[key as string]]) as
+      | Strings<Types>[]
+      | null;
+
+    if (!key) {
+      break;
+    }
+
+    // Before we check the elements type, we'll ensure that the element actually
+    // exists within the given object.
+    if ((Array.isArray(types) ? !types.includes('undefined') : true) && typeof object[key] === 'undefined') {
+      result = { value: object[key], type: typings[key], key: prop ? [...prop, key] : [key] };
+      break;
+    }
+
+    // Next, we'll check to see if the desired typing is an object. Arrays count
+    // as objects and arrays are used to represent multiple different types, and
+    // so we'll need to count for an array.
+    if (typeof typings[key] === 'object' && !Array.isArray(typings[key])) {
+      // Check to see if the type within the object isn't an object.
+      if (typeof object[key] !== 'object' || Array.isArray(object[key])) {
+        result = { value: object[key], type: typings[key], key: prop ? [...prop, key] : [key] };
+        break;
+      }
+
+      // If this element is an object, we'll recall this method a level deeeper.
+      else {
+        result = ensure<T[any]>(object[key], typings[key] as Typings<T[any]>, prop ? [...prop, key] : [key]);
+
+        if (result) {
+          break;
+        }
+      }
+    }
+
+    // If the element isn't an object, we'll check its typings.
+    else if (!validate(object[key], typings[key] as Strings<Types> | Strings<Types>[])) {
+      result = { value: object[key], type: typings[key], key: prop ? [...prop, key] : [key] };
+      break;
     }
   }
 
-  return null;
+  return result;
 }
