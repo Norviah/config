@@ -17,6 +17,12 @@ import { json } from '../util/json';
 
 import * as paths from '../util/paths';
 
+/**
+ * Imports and returns the config file as an instance of the given inteface.
+ * @param  typings An object referencing desired types for each key in T.
+ * @param  options Optional options.
+ * @return                  An instance of T.
+ */
 export function load<T extends Record<string, any>>(typings: Typings<T>, options?: Options<T>): T {
   /**
    * Represents the absolute path for the config file.
