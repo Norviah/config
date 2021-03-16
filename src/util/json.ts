@@ -1,10 +1,10 @@
 import { existsSync } from 'fs';
 
 /**
- * Imports the given JSON path as an object.
- * @param  path The path to import.
- * @return      The given path as an object, or null if it doesn't exist.
+ * Imports the given JSON path as an object, if the path exists.
+ * @param  path The path for the JSON file.
+ * @return      The JSON object.
  */
-export function json<T>(path: string): T | null {
+export function json(path: string): Record<string, any> | null {
   return existsSync(path) && path.endsWith('.json') ? require(path) : null;
 }
