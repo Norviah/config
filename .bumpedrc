@@ -8,7 +8,7 @@
       },
       "building": {
         "plugin": "bumped-terminal",
-        "command": "npm run build:src"
+        "command": "npm run build"
       }
     },
     "postrelease": {
