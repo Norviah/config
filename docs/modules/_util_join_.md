@@ -16,7 +16,7 @@
 
 ▸ **join**(`array`: any[]): string
 
-*Defined in [src/util/join.ts:12](https://github.com/norviah/config/blob/641e50d/src/util/join.ts#L12)*
+*Defined in [src/util/join.ts:12](https://github.com/Norviah/config/blob/54727f7/src/util/join.ts#L12)*
 
 Converts the given array into a string, having the items separated via a
 comma with the last two element, if there's more than one, separated with or.

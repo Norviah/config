@@ -14,28 +14,29 @@
 
 ### ensure
 
-▸ **ensure**\<T>(`object`: T, `typings`: {}): [keyof T, any] \| null
+▸ **ensure**\<T>(`object`: Record\<keyof T, any>, `typings`: [Typings](_types_typings_.md#typings)\<T>, `prop?`: keyof T[]): [Result](../interfaces/_types_result_.result.md)\<T> \| [Result](../interfaces/_types_result_.result.md)\<T[any]> \| undefined
 
-*Defined in [src/util/ensure.ts:13](https://github.com/norviah/config/blob/641e50d/src/util/ensure.ts#L13)*
+*Defined in [src/util/ensure.ts:18](https://github.com/Norviah/config/blob/54727f7/src/util/ensure.ts#L18)*
 
-When JSON is imported as an object via a require import, it simply imports
-that object as it is. The goal of this function is to ensure that the
-imported object has the correct type for each key using the typings object
-which is based off of an interface that can be used at runtime.
+Recursivelies determines if every property within the given object suffices
+to the desired types determined by the typings object.
 
 #### Type parameters:
 
-Name |
------- |
-`T` |
+Name | Type |
+------ | ------ |
+`T` | Record\<string, any> |
 
 #### Parameters:
 
 Name | Type | Description |
 ------ | ------ | ------ |
-`object` | T | The imported JSON object to check. |
-`typings` | {} | The object which states each desired key and types. |
+`object` | Record\<keyof T, any> | The object to ensure. |
+`typings` | [Typings](_types_typings_.md#typings)\<T> | References the desired type for each property in the object. |
+`prop?` | keyof T[] | Represents the current property this method is working on. |
 
-**Returns:** [keyof T, any] \| null
+**Returns:** [Result](../interfaces/_types_result_.result.md)\<T> \| [Result](../interfaces/_types_result_.result.md)\<T[any]> \| undefined
 
-Either null to represent that types are valid, or a tuple to represent the key that has been set to an incorrect value.
+If a property within the object isn't the correct type, an
+                object referencing the: key, value, and desired type is
+                returned, otherwise, undefined if all keys are properly set.
