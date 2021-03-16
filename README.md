@@ -1,6 +1,6 @@
 ## @norviah/config
 
-The purpose of `config` is to allow using JSON files for storing configuration tokens in tandem with Typescript. As TypeScript can't determine types at runtime, this package aims to solve this problem by importing JSON objects and ensuring types at runtime.
+The purpose of `config` is to allow using JSON files for storing configuration values in tandem with TypeScript. As TypeScript can't determine types at runtime, this package aims to solve this problem by importing JSON objects and ensuring types at runtime.
 
 ### Installation
 
@@ -10,109 +10,131 @@ npm i @norviah/config
 
 ### Usage
 
-To use `config`, you must first initialize an interface declaring the keys and values you desire within the config file, then, initialize a new object referencing each key within the interface and the desired type. The desired type must be one of values within the union type <code><a href="./src/types/types.ts">Types</a></code>, as this type represents the various types of values that is supported through JSON, minus objects.
+In order to use `config`, you must first initialize an interface declaring the keys and values you desire within the config file, then, you must initialize an object instance of <code><a href="./src/types/typings.ts">Typings</a></code>. This object is how `config` is able to determine types at runtime, for this new object, assign the type you desire for that specific key, additionally, `config` supports typings for deep-nested properties as well. For every key, assign a value within the union type <code><a href="./src/types/types.ts">Types</a></code>.
+
+Thanks to TypeScript, the typings object is forced to have the same structure as the desired interface, with the values as one of the string types of `Types`.
 
 Available types are:
 - `string`
 - `number`
 - `boolean`
-- `array<string>`
-- `array<number>`
-- `array<boolean>`
-- `undefined`: This type simply determines if a key is optional and doesn't have to be set within the config file.
+- `string[]`
+- `number[]`
+- `boolean[]`
+- `undefined`: This type determines if the key is optional and doesn't have to be set within the config file.
 
+Available options are:
+- path `string`: The absolute path for the config file, this **must** end in `.json`. Defaults to `config/config.json` within the project's root directory.
+- default `T`: An instance of the interface used as default values, if a user doesn't have a config file set, this property is saved in the config's path.
 
-Available `option`s are:
-- path `string`: The absolute path for the config file, this **must** end in `.json`, defaults to `config/config.json` within the project's root directory.
-- default `T`: An instance of the interface you would like to base the config off of, if a config file doesn't exist, this object will be saved to the given path.
-
-The main function of `config` is <code><a href="./src/util/load.ts">load</a></code>, which is the function that imports the config file. The template for `load` is:
+The main function of `config` is <code><a href="./src/util/load.ts">load</a></code>, which is the main function that imports the config file. The template for `load` is:
 
 ```TypeScript
-load<T>(typings: { [key in keyof Required<T>]: Types | Types[] }, options?: { /** options */ });
+load<T>(typings: Typings<T>, options?: { /** options */ });
 // => returns an instance of T, based off of the config file saved to disk
 ```
 
 ### Example
 
-As an example, let's say we're working on a Discord bot, here's how `config` can be used:
-
-`config.json`
-
-```TypeScript
-{
-  "token": "[token]",
-  "id": ["[id]", "[id]"]
-}
-```
+As an example, let's say you would like a user to save a config file describing themself, here's how `config` can be used"
 
 `index.ts`
 
 ```TypeScript
-import { load, Types } from '@norviah/config';
+import { load, Typings } from '@norviah/config';
 
-// First, an interface must be initialized to represent the desired
-// keys and values for TypeScript and he config file.
-interface Config {
+// First, initialize an interface.
+interface Person {
   /**
-   * Represents the bot's token value.
+   * The name of the person.
    */
-  token: string;
+  name: string;
 
   /**
-   * Represents the ID(s) of Discord users that own the client.
+   * Determines if the person is atleast 18 years old.
    */
-  id: string | string[];
-};
+  ofAge: boolean;
 
-// As TypeScript values can't be determine at runtime, we'll initialize
-// a new object to contain the desired type(s) for each key within the interface.
-// Each value must be an instance of the 'Types' union type.
+  /**
+   * The person's age.
+   */
+  age: number;
 
-// In addition, the type of this object must be explicitly stated as TypeScript
-// can't accurately call the correct type of this object implicitly.
-const typings: { [key in keyof Required<Config>]: Types | Types[] } = {
-  // Simply set the desired type for the key.
-  token: "string",
+  /**
+   * Represents the person's favorite numbers.
+   */
+  favoriteNumbers: number[];
 
-  // If multiple types is desired, use an array to represent them.
-  id: ["string", "array<string>"],
+  /**
+   * Represents information regarding the person's job.
+   */
+  job: {
+    name: string | undefined;
+  }
+}
+
+// Next, we'll have to create an object representing the desired types for each key. As
+// TypeScript can't determine types at runtime, config uses an object to determine this,
+// and thanks to TypeScript, this object is forced to have the same structure as the given interface.
+const typings: Typings<Person> = {
+  // Simply set each key to the desired type, all desired types are listed above.
+  name: 'string',
+  ofAge: 'boolean',
+  age: 'number',
+  favoriteNumbers: 'number[]',
+
+  // If you would like a key to have multiple types, use an array.
+  job: {
+    name: ['string', 'undefined']
+  }
 };
 ```
 
-Once an interface is initialized, and an object representing each key within the interface and the desired type, we can use `load` to import the config file saved to disk as an instance of the interface.
+`config.json`
 
-If a config file doesn't exist, an example config file is created using the object that represents the types for each key, in this example, `typings` is that object. Instead, an instance of the interface could be created and passed as `options.default` and will be saved as an example if a config file couldn't be found.
-
-In addition, a path can be passed in the `options` parameter as `options.path`, this represents where the config file should be located, and where one will be created if a config file doesn't exist, note that this value **must** end in `.json`. If a value isn't provided, `config/config.json` within the project's root directory will be used as the default path.
-
-```TypeScript
-const defaultConfig: Config = { token: "[token]", id: ["id"] };
-
-// Don't forget to provide the interface as a generic argument.
-const config: Config = load<Config>(typings, { default: defaultConfig });
-
-// Now that the config is imported, you can use it as you normally would.
-config.token; // => "[token]"
-config.id; // => ["[id]", "[id]"]
-
-// As 'config' works in tandem with TypeScript, types for the object exists as well.
-config.invalidKey; // => Error: Property 'invalidKey' does not exist on type 'Config'.
-```
-
-If an incorrect type is given within the config file, let's say a `number` for the key `id`, for example:
-
-```TypeScript
+```JSON
 {
-  "token": "[token]",
-  "id": 1
+  "name": "norviah",
+  "ofAge": true,
+  "age": 1,
+  "favoriteNumbers": [1, 2, 3, 4, 5],
+  "job": {
+    "name": "GitHub"
+  }
 }
 ```
 
-An error would be thrown informing the user of the incorrect type for the key `id`:
+Once an inteface and an object referencing the desired keys is initialized, we can use `load` to import the config file saved to disk. If a config file doesn't exist, `config` saves the given typings object to the config's path, or, you can provide a default object instead.
+
+```TypeScript
+const config: Person = load<Person>(typings);
+
+// Now that the config has been imported, you can use it as you normally would.
+config.name; // => "norviah"
+config.job.name; // => "GitHub"
+
+// As config works in tandem with TypeScript, types for properties works as normal as well.
+config.invalidKey; // => Error: Property 'invalidKey' does not exist on type 'Person'.
+```
+
+If an incorrect type is set, let's say a `number` for the key `name`, for example:
+
+```JSON
+{
+  "name": 1,
+  "ofAge": true,
+  "age": 1,
+  "favoriteNumbers": [1, 2, 3, 4, 5],
+  "job": {
+    "name": "GitHub"
+  }
+}
+```
+
+An error is thrown informing the user of the incorrect type for the key `name`:
 
 ```
-[[CONFIG ERROR] InvalidType: The key 'id' within the config file should be of type 'string or an array of string(s)', please fix this value and run this program again.]
+[[CONFIG ERROR] InvalidType: The key 'name' within the config file should be of type `string`, please fix this value and run this program again.]
 ```
 
 Of course, if wanted, you can catch the error and handle it in your own way. There are four types of errors that can be thrown from `config`:
@@ -128,7 +150,7 @@ Each of this errors are exported and can be used to do a specific thing on a spe
 import { AbsentError } from '@norviah/config';
 
 try {
-  const config: Config = load<Config>(typings);
+  const config: Person = load<Person>(typings);
 } catch (e) {
   if (e instanceof AbsentError) {
     /** do something */
