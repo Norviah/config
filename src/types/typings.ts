@@ -2,7 +2,7 @@ import { Types } from './types';
 import { Strings } from './typescript/strings';
 
 type Values = Strings<Types> | Strings<Types>[];
-type Objects = 'object<string>' | 'object<number>' | 'object<boolean>' | ('object<string>' | 'object<number>' | 'object<boolean>')[];
+type Objects = 'undefined' | 'object<string>' | 'object<number>' | 'object<boolean>' | ('undefined' | 'object<string>' | 'object<number>' | 'object<boolean>')[];
 
 /**
  * As TypeScript only exists within compile time, we'll need a type to reference
