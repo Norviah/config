@@ -27,7 +27,7 @@ Name | Type |
 
 • `Optional` **default**: T
 
-*Defined in [src/types/options.ts:12](https://github.com/Norviah/config/blob/cd1d202/src/types/options.ts#L12)*
+*Defined in [src/types/options.ts:12](https://github.com/Norviah/config/blob/8642475/src/types/options.ts#L12)*
 
 Represents default values for the config. If a config file doesn't exist,
 this default object will be saved to the config's path. If this property
@@ -39,6 +39,6 @@ ___
 
 • `Optional` **path**: undefined \| string
 
-*Defined in [src/types/options.ts:5](https://github.com/Norviah/config/blob/cd1d202/src/types/options.ts#L5)*
+*Defined in [src/types/options.ts:5](https://github.com/Norviah/config/blob/8642475/src/types/options.ts#L5)*
 
 Represents the config's absolute path.

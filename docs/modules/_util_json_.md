@@ -16,7 +16,7 @@
 
 ▸ **json**(`path`: string): Record\<string, any> \| null
 
-*Defined in [src/util/json.ts:8](https://github.com/Norviah/config/blob/cd1d202/src/util/json.ts#L8)*
+*Defined in [src/util/json.ts:8](https://github.com/Norviah/config/blob/8642475/src/util/json.ts#L8)*
 
 Imports the given JSON path as an object, if the path exists.
 

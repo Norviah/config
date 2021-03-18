@@ -20,7 +20,7 @@
 
 ▸ **validate**(`element`: any, `type`: [Strings](_types_typescript_strings_.md#strings)\<[Types](_types_types_.md#types)> \| [Strings](_types_typescript_strings_.md#strings)\<[Types](_types_types_.md#types)>[]): boolean
 
-*Defined in [src/util/validate.ts:90](https://github.com/Norviah/config/blob/cd1d202/src/util/validate.ts#L90)*
+*Defined in [src/util/validate.ts:90](https://github.com/Norviah/config/blob/8642475/src/util/validate.ts#L90)*
 
 Determines if the given element is the desired type.
 
@@ -41,7 +41,7 @@ Represents if the given element is the desired type.
 
 ▪ `Const` **checks**: object
 
-*Defined in [src/util/validate.ts:9](https://github.com/Norviah/config/blob/cd1d202/src/util/validate.ts#L9)*
+*Defined in [src/util/validate.ts:9](https://github.com/Norviah/config/blob/8642475/src/util/validate.ts#L9)*
 
 As this project uses a config object to set values, and TypeScript doesn't
 determine typings at run time, we'll be using an object to determine if a
