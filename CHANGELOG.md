@@ -1,3 +1,10 @@
+## 2.2.0 (2021-03-18)
+
+* docs: generate documentation ([78feef0](https://github.com/Norviah/config/commit/78feef0))
+* feat: allow the type 'undefined' to be set to objects ([8642475](https://github.com/Norviah/config/commit/8642475))
+
+
+
 ## 2.1.0 (2021-03-18)
 
 * docs: generate documentation ([885d539](https://github.com/Norviah/config/commit/885d539))
