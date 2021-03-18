@@ -34,9 +34,10 @@ export function ensure<T extends Record<string, any>>(object: Record<keyof T, an
     // within the given object.
     const key: keyof T | undefined = keys.shift();
 
-    const types = (typeof typings[key as string] === 'object' ? null : Array.isArray(typings[key as string]) ? typings[key as string] : [typings[key as string]]) as
-      | Strings<Types>[]
-      | null;
+    const type = typings[key as string];
+    const array = Array.isArray(typings[key as string]);
+
+    const types = (typeof type === 'object' && !array ? null : array ? type : [type]) as Strings<Types>[] | null;
 
     if (!key) {
       break;
