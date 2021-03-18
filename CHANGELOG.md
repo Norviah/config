@@ -1,3 +1,10 @@
+## <small>2.0.1 (2021-03-18)</small>
+
+* docs: generate documentation ([319e896](https://github.com/Norviah/config/commit/319e896))
+* fix: check to see if the desired type isn't an array as well when checking if it's an object ([d9b32fc](https://github.com/Norviah/config/commit/d9b32fc))
+
+
+
 ## 2.0.0 (2021-03-16)
 
 * docs: generate documentation ([fe5b1f3](https://github.com/Norviah/config/commit/fe5b1f3))
