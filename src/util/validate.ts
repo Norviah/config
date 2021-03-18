@@ -54,6 +54,31 @@ const checks: { [key in Strings<Types>]: (element: any) => boolean } = {
   'boolean[]': (element: any): boolean => {
     return Array.isArray(element) && element.every((entry: any): boolean => typeof entry === 'boolean');
   },
+
+  /**
+   * type: object<string>
+   * Determines if the given element is an object where every value is a string.
+   */
+  'object<string>': (element: any): boolean => {
+    return typeof element === 'object' && !Array.isArray(element) && Object.values(element).every((value: any) => typeof value === 'string');
+  },
+
+  /**
+   * type: object<number>
+   * Determines if the given element is an object where every value is a number.
+   */
+  'object<number>': (element: any): boolean => {
+    return typeof element === 'object' && !Array.isArray(element) && Object.values(element).every((value: any) => typeof value === 'number');
+  },
+
+  /**
+   * type: object<boolean>
+   * Determines if the given element is an object where every value is a
+   * boolean.
+   */
+  'object<boolean>': (element: any): boolean => {
+    return typeof element === 'object' && !Array.isArray(element) && Object.values(element).every((value: any) => typeof value === 'boolean');
+  },
 };
 
 /**
