@@ -16,7 +16,7 @@
 
 • `Const` **logger**: Logger = new Logger()
 
-*Defined in [src/structs/logger.ts:7](https://github.com/Norviah/config/blob/d9b32fc/src/structs/logger.ts#L7)*
+*Defined in [src/structs/logger.ts:7](https://github.com/Norviah/config/blob/cd1d202/src/structs/logger.ts#L7)*
 
 An initialized instance of the logging system, which allows multiple files to
 use this module to log without having to initialize a new instance each time.

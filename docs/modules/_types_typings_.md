@@ -8,16 +8,25 @@
 
 ### Type aliases
 
+* [Objects](_types_typings_.md#objects)
 * [Typings](_types_typings_.md#typings)
 * [Values](_types_typings_.md#values)
 
 ## Type aliases
 
+### Objects
+
+Ƭ  **Objects**: \"object\<string>\" \| \"object\<number>\" \| \"object\<boolean>\" \| (\"object\<string>\" \| \"object\<number>\" \| \"object\<boolean>\")[]
+
+*Defined in [src/types/typings.ts:5](https://github.com/Norviah/config/blob/cd1d202/src/types/typings.ts#L5)*
+
+___
+
 ### Typings
 
 Ƭ  **Typings**\<T>: {}
 
-*Defined in [src/types/typings.ts:10](https://github.com/Norviah/config/blob/d9b32fc/src/types/typings.ts#L10)*
+*Defined in [src/types/typings.ts:11](https://github.com/Norviah/config/blob/cd1d202/src/types/typings.ts#L11)*
 
 As TypeScript only exists within compile time, we'll need a type to reference
 desired types of a given interface within runtime.
@@ -34,4 +43,4 @@ ___
 
 Ƭ  **Values**: [Strings](_types_typescript_strings_.md#strings)\<[Types](_types_types_.md#types)> \| [Strings](_types_typescript_strings_.md#strings)\<[Types](_types_types_.md#types)>[]
 
-*Defined in [src/types/typings.ts:4](https://github.com/Norviah/config/blob/d9b32fc/src/types/typings.ts#L4)*
+*Defined in [src/types/typings.ts:4](https://github.com/Norviah/config/blob/cd1d202/src/types/typings.ts#L4)*
