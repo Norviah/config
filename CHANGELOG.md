@@ -1,3 +1,11 @@
+## 2.1.0 (2021-03-18)
+
+* docs: generate documentation ([885d539](https://github.com/Norviah/config/commit/885d539))
+* docs: update readme ([cd1d202](https://github.com/Norviah/config/commit/cd1d202))
+* feat: implement types to represent objects with infinite many values ([c463c8c](https://github.com/Norviah/config/commit/c463c8c))
+
+
+
 ## <small>2.0.1 (2021-03-18)</small>
 
 * docs: generate documentation ([319e896](https://github.com/Norviah/config/commit/319e896))
