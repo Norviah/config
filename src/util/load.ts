@@ -62,14 +62,35 @@ export function load<T extends Record<string, any>>(typings: Typings<T>, options
   // If a value is returned, that represents that some property within the
   // object is set to an incorrect type.
   if (result) {
-    // Represents the desired type for the element.
-    const type: string = Array.isArray(result.type) ? join(result.type) : typeof result.type === 'object' ? inspect(result.type) : result.type;
+    // Here we'll initialize a variable to represent the desired type.
+    let type: string | string[];
+
+    if (Array.isArray(result.type) || typeof result.type) {
+      // We'll wrap the desired type within an array.
+      type = (Array.isArray(result.type) ? result.type : [result.type]) as string[];
+
+      // Represents an array containing, if given, desired object types such as
+      // object<string> or object<number>.
+      const objects: string[] = type.filter((type: string) => type.includes('object')).map((type) => type.match(/(?<=\<)\w+(?=\>)/)![0]);
+
+      // We'll wrap the various object types in a single element, so we'll
+      // remove it from the global array.
+      type = type.filter((type: string) => !type.match(/(?<=\<)\w+(?=\>)/g));
+
+      type.push(`an object with all values set to ${join(objects)}`);
+    }
+
+    // If the desired type is an object, we'll set it to the object's string
+    // representation.
+    else {
+      type = inspect(result.type);
+    }
 
     // Depending on the type of the value, we'll throw a specific error.
     // Essentially, we'll check if the value exists to determine the error.
     const Error = result.value === undefined ? AbsentError : InvalidTypeError;
 
-    throw new Error(result.key.join('.'), type);
+    throw new Error(result.key.join('.'), Array.isArray(type) ? join(type) : type);
   }
 
   return object as T;
