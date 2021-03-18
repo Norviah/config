@@ -22,7 +22,9 @@ Available types are:
 - `boolean`
 - `string[]`
 - `number[]`
-- `boolean[]`
+- `object<string>`: Represents an object with infinitely many values, with each value set to a string.
+- `object<number>`: Represents an object with infinitely many values, with each value set to a number.
+- `object<boolean>`: Represents an object with infinitely many values, with each value set to a boolean.
 - `undefined`: This type determines if the key is optional and doesn't have to be set within the config file.
 
 Available options are:
