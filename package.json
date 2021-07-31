@@ -1,6 +1,6 @@
 {
   "name": "@norviah/config",
-  "version": "2.2.0",
+  "version": "3.0.0",
   "description": "Use json files for configuration purposes in tandem with typings.",
   "private": false,
   "main": "lib/index.js",
