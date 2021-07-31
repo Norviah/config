@@ -1,3 +1,10 @@
+## 3.0.0 (2021-07-31)
+
+* docs: generate documentation ([407a1c3](https://github.com/Norviah/config/commit/407a1c3))
+* revert: remove the possiblity to have infinite objects as types ([37a46e1](https://github.com/Norviah/config/commit/37a46e1))
+
+
+
 ## 2.2.0 (2021-03-18)
 
 * docs: generate documentation ([78feef0](https://github.com/Norviah/config/commit/78feef0))
