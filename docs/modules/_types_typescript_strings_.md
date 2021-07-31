@@ -16,7 +16,7 @@
 
 Ƭ  **Strings**\<T>: T *extends* string ? T : never
 
-*Defined in [src/types/typescript/strings.ts:4](https://github.com/Norviah/config/blob/8642475/src/types/typescript/strings.ts#L4)*
+*Defined in [src/types/typescript/strings.ts:4](https://github.com/Norviah/config/blob/37a46e1/src/types/typescript/strings.ts#L4)*
 
 Extracts strings within a given union type.
 
