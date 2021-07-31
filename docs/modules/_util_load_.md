@@ -16,7 +16,7 @@
 
 ▸ **load**\<T>(`typings`: [Typings](_types_typings_.md#typings)\<T>, `options?`: [Options](../interfaces/_types_options_.options.md)\<T>): T
 
-*Defined in [src/util/load.ts:26](https://github.com/Norviah/config/blob/8642475/src/util/load.ts#L26)*
+*Defined in [src/util/load.ts:26](https://github.com/Norviah/config/blob/37a46e1/src/util/load.ts#L26)*
 
 Imports and returns the config file as an instance of the given inteface.
 

@@ -16,7 +16,7 @@
 
 ▸ **ensure**\<T>(`object`: Record\<keyof T, any>, `typings`: [Typings](_types_typings_.md#typings)\<T>, `prop?`: keyof T[]): [Result](../interfaces/_types_result_.result.md)\<T> \| [Result](../interfaces/_types_result_.result.md)\<T[any]> \| undefined
 
-*Defined in [src/util/ensure.ts:18](https://github.com/Norviah/config/blob/8642475/src/util/ensure.ts#L18)*
+*Defined in [src/util/ensure.ts:18](https://github.com/Norviah/config/blob/37a46e1/src/util/ensure.ts#L18)*
 
 Recursivelies determines if every property within the given object suffices
 to the desired types determined by the typings object.
