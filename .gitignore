@@ -1,6 +1,9 @@
 # directories
 lib
+logs
+build
 node_modules
+certificates
 
 # files
-.DS_Store
+.env
