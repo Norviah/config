@@ -1,12 +1,15 @@
-import { AbsentError } from './structs/errors/absent';
-import { InvalidError } from './structs/errors/invalid';
-import { InvalidTypeError } from './structs/errors/invalidType';
-import { MissingError } from './structs/errors/missing';
+// ---
+// STRUCTURES
+// ---
 
-import { Types } from './types/types';
-import { Typings } from './types/typings';
-import { Options } from './types/options';
+export { Config } from './structs/Config';
+export { ConfigError } from './structs/ConfigError';
 
-import { load } from './util/load';
+// ---
+// TYPES
+// ---
 
-export { load, Types, Typings, Options, AbsentError, InvalidError, InvalidTypeError, MissingError };
+export { NullableConstructor } from './types/NullableConstructor';
+export { Options } from './types/Options';
+export { Primitive, ToString, TypeMappings } from './types/Primitive';
+export { KeyOptions, Structure } from './types/Structure';
