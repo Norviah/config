@@ -5,9 +5,9 @@
     "outDir": "lib",
     "target": "es2020",
     "moduleResolution": "node",
-    "declaration": true,
     "strict": true,
-    "esModuleInterop": true
+    "esModuleInterop": true,
+    "declaration": true
   },
   "include": [
     "src"
