@@ -1,8 +1,7 @@
 {
   "name": "@norviah/config",
   "version": "3.0.0",
-  "description": "Use json files for configuration purposes in tandem with typings.",
-  "private": false,
+  "description": "Manage JSON configuration files with type safety",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",
   "files": [
@@ -12,47 +11,46 @@
     "lib": "lib"
   },
   "scripts": {
-    "build": "./node_modules/typescript/bin/tsc",
-    "publish:patch": "./node_modules/bumped/bin/index.js release patch",
-    "publish:minor": "./node_modules/bumped/bin/index.js release minor",
-    "publish:major": "./node_modules/bumped/bin/index.js release major",
-    "publish:first": "./node_modules/bumped/bin/index.js release first",
-    "publish:npm": "git push --follow-tags origin master && npm publish",
-    "run": "npm run build:src && node ./lib/index.js"
+    "build:src": "./node_modules/typescript/bin/tsc",
+    "build:docs": "./node_modules/typedoc/bin/typedoc --options typedoc.json",
+    "build:watch": "./node_modules/typescript/bin/tsc -w",
+    "publish:patch": "npm run build:src && ./node_modules/standard-version/bin/cli.js --release-as patch && npm run push",
+    "publish:minor": "npm run build:src && ./node_modules/standard-version/bin/cli.js --release-as minor && npm run push",
+    "publish:major": "npm run build:src && ./node_modules/standard-version/bin/cli.js --release-as major && npm run push",
+    "push": "git push --follow-tags origin master && npm publish",
+    "lint": "node ./node_modules/prettier/bin-prettier.js --config .prettierrc.json --write ./src"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/Norviah/config.git"
+    "url": "git+https://github.com/norviah/config.git"
   },
   "keywords": [
-    "config"
+    "JSON"
   ],
   "author": "norviah",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/Norviah/config/issues"
+    "url": "https://github.com/norviah/config/issues"
   },
-  "homepage": "https://github.com/Norviah/config#readme",
+  "homepage": "https://github.com/norviah/config#readme",
   "devDependencies": {
     "@types/app-root-path": "^1.2.4",
-    "@types/mocha": "^8.0.4",
-    "@types/node": "^14.14.7",
-    "@types/ws": "^7.4.0",
-    "@typescript-eslint/eslint-plugin": "^4.7.0",
-    "@typescript-eslint/parser": "^4.7.0",
-    "bumped": "^0.14.0",
-    "eslint": "^7.13.0",
-    "eslint-config-prettier": "^6.15.0",
-    "eslint-plugin-prettier": "^3.1.4",
-    "mocha": "^8.2.1",
-    "prettier": "^2.1.2",
-    "standard-version": "^9.0.0",
-    "typedoc": "^0.19.2",
-    "typedoc-plugin-markdown": "^3.0.11",
-    "typescript": "^4.0.5"
+    "@types/node": "^18.15.11",
+    "@types/ws": "^8.5.4",
+    "@typescript-eslint/eslint-plugin": "^5.57.0",
+    "@typescript-eslint/parser": "^5.57.0",
+    "eslint": "^8.37.0",
+    "eslint-config-prettier": "^8.8.0",
+    "eslint-plugin-prettier": "^4.2.1",
+    "prettier": "^2.8.7",
+    "standard-version": "^9.5.0",
+    "type-fest": "^3.7.2",
+    "typedoc": "^0.23.28",
+    "typedoc-plugin-markdown": "^3.14.0",
+    "typescript": "^5.0.2"
   },
   "dependencies": {
-    "@norviah/logger": "^2.0.1",
-    "app-root-path": "^3.0.0"
+    "@norviah/logger": "^6.1.1",
+    "app-root-path": "^3.1.0"
   }
 }
