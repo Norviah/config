@@ -1,4 +1,11 @@
 
+## [4.2.0](https://github.com/norviah/config/compare/v4.1.0...v4.2.0) (2023-03-31)
+
+
+### Features
+
+* export the enum for error codes ([d233bc4](https://github.com/norviah/config/commit/d233bc44186cabaf1234dfbe112964af5d5c1105))
+
 ## [4.1.0](https://github.com/norviah/config/compare/v4.0.0...v4.1.0) (2023-03-31)
 
 
