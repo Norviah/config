@@ -3,7 +3,7 @@
 // ---
 
 export { Config } from './structs/Config';
-export { ConfigError } from './structs/ConfigError';
+export { ConfigError, ErrorCodes } from './structs/ConfigError';
 
 // ---
 // TYPES
