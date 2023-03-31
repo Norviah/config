@@ -29,9 +29,16 @@ export enum ErrorCodes {
   REQUIRED_KEY = 'REQUIRED_KEY',
 
   /**
-   *
+   * Represents the event where a key in the JSON config file was not specified
+   * in the provided schema.
    */
   UNKNOWN_KEY = 'UNKNOWN_KEY',
+
+  /**
+   * Represents the event where the type of the parent key of a key in the
+   * JSON config file is invalid.
+   */
+  INVALID_PARENT_TYPE = 'INVALID_PARENT_TYPE',
 }
 
 export const MessageGenerator = {
@@ -90,6 +97,15 @@ export const MessageGenerator = {
   UNKNOWN_KEY: (key: string): string => {
     return `unexpected key \`${key}\``;
   },
+
+  /**
+   * Returns the error message for the `INVALID_PARENT_TYPE` error code.
+   * @param key The key that has an invalid parent type.
+   * @returns The constructed error message.
+   */
+  INVALID_PARENT_TYPE: (key: string): string => {
+    return `the type of the parent key of \`${key}\` is invalid, expected an object`;
+  },
 };
 
 export class ConfigError<T extends keyof typeof ErrorCodes> extends Error {
@@ -120,7 +136,7 @@ export class ConfigError<T extends keyof typeof ErrorCodes> extends Error {
   public constructor(code: T, args: (typeof MessageGenerator)[T] extends (...args: infer P) => any ? P : undefined) {
     const message: string = (MessageGenerator[code] as (...args: any[]) => string)(...(args as any[])) as string;
 
-    super(message);
+    super(`${code}: ${message}`);
 
     this.code = code;
     this.args = args;

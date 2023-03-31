@@ -1,81 +1,41 @@
-import { ConfigError, ErrorCodes } from './ConfigError';
-import { read } from '../util/read';
 import { Options } from '../types/Options';
+import { read } from '../util/read';
+import { typeName } from '../util/typeName';
+import { ConfigError, ErrorCodes } from './ConfigError';
+import { isKeyOptions } from '../util/isKeyOptions';
 
-import type { JsonObject, JsonValue } from 'type-fest';
-import type { Structure, KeyOptions } from '../types/Structure';
+import type { JsonValue } from 'type-fest';
 import type { NullableConstructor } from '../types/NullableConstructor';
-import type { ToString, TypeMappings, Primitive } from '../types/Primitive';
 import type { ParsingOptions } from '../types/ParsingOptions';
-
-/**
- * Returns a string representation of the provided type.
- *
- * A quick and dirty way to get a string representation of the provided type,
- * the function will return the `typeName` property if it exists, otherwise it
- * infer the name from the `type` property.
- * @param options The options for the key.
- * @returns A string representation of the provided type.
- */
-function typeName<T>(options: KeyOptions<T>): string {
-  return options.typeName || (typeof options.type === 'string' ? options.type : Array.isArray(options.type) ? options.type.join(' | ') : options.type.name);
-}
+import type { Primitive, ToString, TypeMappings } from '../types/Primitive';
+import type { KeyOptions, Structure } from '../types/Structure';
 
 export class Config {
   /**
-   * Ensures that the provided key, provided from a `Structure` instance,
-   * represents options for the key.
+   * Ensures that the provided value is an instance of the specified
+   * _primitive_, type.
    *
-   * When parsing a JSON object using the `Parse` method, we iterate through the
-   * structure object along with the JSON object itself. The issue is, at
-   * runtime, we're not sure whether if a key within the structure object
-   * represents either a sub-structure or options for the key.
+   * `Ensure` is a type guard that ensures the provided value is of the
+   * specified primitive type, implementing an `instanceof` check to ensure
+   * this. As this method implements a type guard, it can be used to narrow
+   * the type of the provided value.
    *
-   * `IsKeyOptions` is a helper method to ensure that an extract key from a
-   * `Structure` instance is an instance of `KeyOptions`, rather than a
-   * `Structure`.
-   * @param value The value of the key within the structure object.
-   * @returns Whether the value represents options for the key.
-   */
-  private static IsKeyOptions<T extends Record<string, any>>(value: KeyOptions<T[keyof T]> | Structure<T[keyof T]>): value is KeyOptions<T[keyof T]> {
-    // In order to determine whether if the value defines options for the key,
-    // we will need to consider the `type` property, as this proprety is the
-    // only property that is required within `KeyOptions`.
-
-    // When considering the `type` property, we first need to ensure that the
-    // value is an object. This should always be the case, but we'll check just
-    // to be safe. We will also ensure that the `type` property exists.
-    if (typeof value !== 'object' || !('type' in value)) {
-      return false;
-    }
-
-    // `type` represents the type of the key, and can either be a string, an
-    // array of strings, or a constructor function. If the type is one of these
-    // three, we can safely assume that the value defines options for the key.
-    return Array.isArray(value.type) || ['string', 'function'].includes(typeof value.type);
-  }
-
-  /**
-   * Ensures that the provided value is an instance of the specified type.
-   *
-   * `Ensure` is a type guard that ensures the provided value is an instance of
-   * the specified type, implementing an `instanceof` check to ensure this. As
-   * the method is a type guard, it will inform TypeScript, allowing for
-   * type-safety when accessing the value.
-   * @param value The value to check.
-   * @param type The type to check against.
-   * @returns Whether the value is an instance of the specified type.
-   * @example
+   * Note that this method only considers primitive types, and will not
+   * consider any other type.
+   * @template T The primitive type(s) to check against.
+   * @param value The value to check
+   * @param type The type to check against
+   * @returns `true` if the value is an instance of the specified type.
    * ```ts
-   * const variable: unknown = 'sample text';
+   * const variable: unknown = 'Hello, world!';
    *
-   * if (Parser.Ensure(variable, ['string'])) {
-   *   /* in this scope, `variable` is ensured to be of type `string` *\/
+   * if (Config.Ensure(variable, ['string', 'boolean'])) {
+   *   /* in this scope, `variable` is ensured to be a string or a boolean *\/
    * }
    * ```
    */
-  public static Ensure<T extends Primitive>(value: unknown, type: T[]): value is TypeMappings[T] {
-    return type.includes(typeof value as T);
+  public static Ensure<T extends Primitive>(value: unknown, type: T | T[]): value is TypeMappings[T] {
+    return (Array.isArray(type) ? type : [type]).includes(typeof value as T);
   }
 
   /**
@@ -85,12 +45,13 @@ export class Config {
    * information provided in options. `options` represents important information
    * about the key, we will use this information to determine how to parse the
    * value.
+   * @template T The desired type of the value.
    * @param pair The key and value to cast.
    * @param options The options for the key.
    * @returns An object representing the result of the cast.
    */
-  public static Cast<T>(pair: [string[], JsonValue], options: KeyOptions<T>): T {
-    const value: JsonValue = pair[1];
+  public static Cast<T>(pair: [string[], JsonValue | undefined], options: KeyOptions<T>): T {
+    const value: JsonValue | undefined = pair[1];
 
     // Before we attempt to parse the value, we need to ensure that the value
     // actually exists. If the value is undefined, we need to determine whether
@@ -148,23 +109,102 @@ export class Config {
   }
 
   /**
+   * A helper method for parsing a JSON object into an instance of `T`.
+   *
+   * This method is used internally by the `Parse` method to implement the
+   * logic of recursively parsing a JSON object into an instance of `T`. During
+   * the parsing process, for a given key, this method will determine if the key
+   * represents a recursive structure, or if the key represents an actual key to
+   * be parsed.
+   *
+   * If the key represents a recursive structure, this method will recursively
+   * call the `Parse` method to parse the value of the key into an instance of
+   * the specified structure.
+   * @template T The type of the JSON object.
+   * @param options Options for parsing.
+   * @returns The parsed value of the key.
+   */
+  private static Helper<T extends Record<string, any>>(options: { parents?: string[]; enforce?: boolean; key: Extract<keyof T, string>; json: JsonValue | undefined; structure: Structure<T> }): T {
+    const { key, json, parents, enforce } = options;
+
+    // When a key is defined in the structure, it can mean one of two things:
+    // the key represents the key itself, or the key is a subobject. Here are
+    // the valid types that a key can be:
+
+    // - `KeyOptions<T>`: The key represents the desired key, with the value
+    //    representing an object defining options for the key.
+    // - `NullableConstructor<T> | ToString<T> | ToString<T>[]`: The key
+    //    also represents the desired key, but the value is a shortcut for
+    //    specifying the key's type.
+    // - `Structure<T>`: The key is a subparent object, representing more keys
+    //    within the object.
+
+    let structure = options.structure as KeyOptions<T[keyof T]> | ToString<T[keyof T]> | NullableConstructor<T[keyof T]> | Structure<T[keyof T]>;
+
+    // Note that the first two types essentially represent the same thing, as
+    // the second type allows the user to quickly specify the desired type of
+    // the key, without having to specify an object.
+
+    // From this, we will convert the variable into a `KeyOptions<T>`
+    // instance, if the key represents the second type.
+
+    if (Array.isArray(structure) || typeof structure === 'string' || typeof structure === 'function') {
+      structure = { type: structure } as KeyOptions<T[keyof T]>;
+    }
+
+    // At this point, we'll need to determine whether if the key represents a
+    // nested object or an actual key that is expected to be set within the
+    // JSON object. `structure` can be either a `KeyOptions<T>` instance, which
+    // represents an actual key, or a `Config` instance, which represents a
+    // nested object.
+
+    // Ensuring that the value represents options for a key, and not a nested
+    // object, is done by the `IsKeyOptions` method. If the value represents
+    // options for a key, we'll cast the value into the desired type, returning
+    // the resolved value.
+
+    if (isKeyOptions(structure)) {
+      return Config.Cast<T[keyof T]>([parents ? [...parents, key] : [key], json], structure);
+    }
+
+    // If the value represents a nested object, we'll need to recursively call
+    // the `Parse` method to parse the subobject into an instance of the
+    // desired structure.
+
+    // Before we do that, we'll need to ensure that the value specified within
+    // the JSON object, if a value is specified, is an object. If the value is
+    // not an object, we'll throw an error, as the value is not valid.
+
+    if (json && (typeof json !== 'object' || Array.isArray(json))) {
+      throw new ConfigError(ErrorCodes.INVALID_PARENT_TYPE, [`${parents ? `${parents.join('.')}.` : ''}${String(key)}`]);
+    }
+
+    return Config.Parse({ structure, json, enforce, parents: parents ? [...parents, String(key)] : [String(key)] } as ParsingOptions<T[keyof T]>);
+  }
+
+  /**
    * Parses the provided JSON object into an instance of `T`.
    *
-   * `Parse` is the method that parses the provided JSON object into an instance
-   * of the desired type. The method recursively iterates through the JSON
-   * object in tandem with the defined structure, attempting to parse each key's
-   * value into the type specified by the structure.
-   * @param structure Defines the structure for each key, recursively.
-   * @param json The JSON object to parse.
-   * @param parents If specified, the method is in a recursive call, and the
-   * parents of the current key are specified.
-   * @returns An instance of `T` parsed from the provided JSON object.
+   * The main entry point for the library, `Parse` will attempt to parse the
+   * provided JSON object into an instance of the specified interface. The
+   * method will recursively iterate through the JSON object in tandem with the
+   * define structure, attempting to parse each key's value into the type
+   * specified in the structure.
+   *
+   * When parsing a JSON object, you **must** provide a structure object for the
+   * desired interface, this object will define how each key within the
+   * interface should be parsed along with any additional options.
+   * @template T The desired structure to parse the JSON object into.
+   * @param options Options for parsing.
+   * @returns An instance of `T` with the values parsed from the provided JSON
+   * object.
    * @example
    * In order to properly call the `Parse` method, we must first define an
-   * interface to base the desired result on.
+   * interface to base the desired result on. As a basic example, we'll define
+   * a simple interface for a configuration file of a Discord bot.
    *
    * ```ts
-   * interface Config {
+   * interface BotConfig {
    *   id: string;
    *   token: string;
    *   settings: {
@@ -173,39 +213,94 @@ export class Config {
    * }
    * ```
    *
-   * Once we have defined the interface, we can call the `Parse`, providing an
-   * object to define the desired structure for each key within the interface,
-   * recursively.
-   *
-   * Note that when marking a key as optional, the key must be marked as
-   * optional, rather than the parent object as a whole. Objects that are marked
-   * as optional are ignored and will be treated as if the values are required.
+   * Once we have defined the interface, we can then call the `Parse` method,
+   * providing a structure object to define how each key within the interface
+   * should be parsed.
    *
    * ```ts
-   * const parsed: Config = Parser.Parse<Config>(
+   * const config: Config = Config.Parse<BotConfig>(
    *   {
-   *     id: 'string',
-   *     token: 'string',
+   *     id: {
+   *       type: 'string',
+   *     },
+   *     token: {
+   *       type: 'string',
+   *     },
    *     settings: {
    *       mentionAll: {
    *         type: 'boolean',
-   *         optional: true,
+   *         optional: true
    *       },
    *     },
    *   },
    *
    *   {
-   *     /* the prvovided JSON object *\/
+   *     /* the JSON object *\/
    *   }
    * );
    * ```
    *
-   * Once parsed, you can access the parsed object as an instance of `Config`,
-   * assuming that no errors occurred. The values are extracted from the
-   * provided JSON object.
+   * If the JSON object is valid and no errors are encountered, the `Parse`
+   * method will return an instance of the specified interface. From there, we
+   * can access the properties of the object as we would normally.
+   *
+   * > Note: If you wish to mark something as optional, you **must** only mark
+   * > a key as optional, not a parent key. Parents that are marked as optional
+   * > will not be treated as optional, they will be treated as a required
+   * > property.
+   *
+   * As previously mentioned, the above example is a basic example of how to
+   * use the `Parse` method. The potential of the library lies when you provide
+   * a custom constructor for a key, allowing you to implement the logic of how
+   * to parse the value of a key.
+   *
+   * For this more advanced example, we'll be creating a configuration file for
+   * a build script which will do _something_ with a file as an input. The
+   * configuration file will allow the user to specify the path to the input
+   * file, here is how we can implement this.
+   *
+   * ```ts
+   * import { existsSync, statSync } from 'fs';
+   *
+   * import type { Stats } from 'fs';
+   * import type { JsonValue } from 'type-fest';
+   * import type { Structure } from '@norviah/config';
+   *
+   * interface BuildConfig {
+   *   input: Stats;
+   * }
+   *
+   * const structure: Structure<BuildConfig> = {
+   *   input: {
+   *     type: function (value: JsonValue): Stats | null {
+   *       if (typeof value !== 'string') {
+   *         return null;
+   *       } else if (!existsSync(value) || !statSync(value).isFile()) {
+   *         return null;
+   *       }
+   *
+   *       return statSync(value);
+   *     },
+   *   },
+   * };
+   *
+   * const config = Config.Parse<BuildConfig>(structure, { /* ... *\/ }});
+   * ```
+   *
+   * In the above example, we've defined a custom constructor for the `input`
+   * key, which will attempt to parse the value of the key into a `Stats`
+   * instance. If the value is not a string, or the path does not exist, or the
+   * path is not a file, the constructor will return `null`, which will cause
+   * the `Parse` method to throw an error.
+   *
+   * Here is the main potential of the library, you can define a custom
+   * constructor which can cast the value of a key into any type you wish,
+   * using any logic you wish, such as an API call.
    */
-  public static Parse<T extends Record<string, any>, E extends boolean | undefined = undefined>(options: ParsingOptions<T, E>): E extends true ? T : T | Record<string, any> {
-    // The container for the resulting parsed object, while iterating through
+  public static Parse<T extends Record<string, any>>(options: ParsingOptions<T>): T {
+    const { structure, json, parents } = options;
+
+    // The container for the resulting parsed object, while iterating thorugh
     // the JSON object, each parsed value will be set within this container.
     const result: Record<string, any> = {};
 
@@ -214,68 +309,39 @@ export class Config {
     // object and its keys.
 
     // In order to parse the object into an instance of `T`, we will iterate
-    // through the structure definition object in tandem with the JSON object.
-    // Each key within the structure will represent important information
-    // regarding that specific key, such as the constructor for the key's type.
-
-    const { structure, json, parents, enforce } = options;
+    // through each key within the structur in tandem with the JSON obejct, for
+    // each key, we will attempt to parse the value of the key into the
+    // specified type.
 
     for (const key in options.structure) {
-      // When a key is defined in the structure, it can mean one of two things:
-      // the key represents the key itself, or the key is a subobject. Here are
-      // the valid types that a key can be:
-
-      // - `KeyOptions<T>`: The key represents the desired key, with the value
-      //    representing an object defining options for the key.
-      // - `NullableConstructor<T> | ToString<T> | ToString<T>[]`: The key
-      //    also represents the desired key, but the value is a shortcut for
-      //    specifying the key's type.
-      // - `Structure<T>`: The key is a subparent object, representing more keys
-      //    within the object.
-
-      let options = structure[key] as KeyOptions<T[keyof T]> | ToString<T[keyof T]> | NullableConstructor<T[keyof T]> | Structure<T[keyof T]>;
-
-      // Note that the first two types essentially represent the same thing, as
-      // the second type allows the user to quickly specify the desired type of
-      // the key, without having to specify an object.
-
-      // From this, we will convert the variable into a `KeyOptions<T>`
-      // instance, if the key represents the second type.
-
-      if (Array.isArray(options) || typeof options === 'string' || typeof options === 'function') {
-        options = { type: options } as KeyOptions<T[keyof T]>;
+      // If the key is not a property of the structure, we will skip it. This
+      // is to prevent any potential errors that may occur if the structure
+      // object contains any inherited properties.
+      if (!options.structure.hasOwnProperty(key)) {
+        continue;
       }
 
-      // At this point, we'll need to determine whether if the key represents a
-      // nested object or an actual key that is expected to be set within the
-      // JSON object. `options` can be either a `KeyOptions<T>` instance, which
-      // represents an actual key, or a `Config<T>` instance, which represents a
-      // nested object.
-
-      // Ensuring that the value represents options for a key, and not a nested
-      // object, is done by the `isKeyOptions` function. If the value is a
-      // nested object, we'll need to recursively call `parse` with the nested
-      // config.
-      if (!Config.IsKeyOptions(options)) {
-        result[key] = Config.Parse<T[keyof T], E>({
-          structure: options,
-          json: (key in json ? json[key] : {}) as JsonObject,
-          parents: parents ? [...parents, key] : [key],
-          enforce,
-        } as ParsingOptions<T[keyof T], E>);
-      }
-
-      // If the value defines options for the key, we'll need to attempt to
-      // parse the JSON value into the desired type.
-      else {
-        result[key] = Config.Cast<T[keyof T]>([parents ? [...parents, key] : [key], (key in json ? json[key] : undefined) as JsonValue], options);
-      }
+      result[key] = Config.Helper<T[keyof T]>({
+        key,
+        structure: structure[key] as Structure<T[keyof T]>,
+        json: json ? json[key] : undefined,
+        parents: parents,
+      });
     }
 
+    // After we have iterated through the structure, parsing each key and saving
+    // the resolved value into the result container, we'll check if the user has
+    // set the `enforce` option.
+
+    // If this option is set, the user wants to ensure that the JSON object has
+    // no unknown keys, essentially enforcing that no unknown keys have been set
+    // by the json object. If set, we'll iterate through each key within the
+    // JSON object and check if the key also exists within the structure.
+
     if (options.enforce) {
-      for (const key in json) {
-        if (!(key in structure)) {
-          throw new ConfigError(ErrorCodes.UNKNOWN_KEY, [`${parents ? `${parents.join('.')}.` : ''}${key}`]);
+      for (const key in options.json) {
+        if (!options.structure.hasOwnProperty(key)) {
+          throw new ConfigError(ErrorCodes.UNKNOWN_KEY, [`${options.parents ? `${options.parents.join('.')}.` : ''}${key}`]);
         }
       }
     }
@@ -284,180 +350,23 @@ export class Config {
   }
 
   /**
-   * Imports a JSON object from a file and parses it into an instance of `T`.
+   * Imports a JSON object from the specified path and parses it into an
+   * instance of `T`.
    *
-   * @template T The desired type to parse the JSON object into.
-   * @param structure Defines the structure for each key in the JSON object.
-   * @param options Options for the loader.
-   * @returns An instance of `T` with the values from the JSON object.
-   * As a basic example, let's say we want to define a configuration object for
-   * a Discord bot. The config will have two keys, `token` and `prefix`, both of
-   * which are the primitive type, `string`.
+   * `Import` will attempt to read the JSON object from the specified path and
+   * pass it to the `Parse` method, providing the necessary arguments to the
+   * method. Once parsed, the resulting object will be an instance of `T` with
+   * the values parsed from the JSON object.
    *
-   * Here's how we can implement this:
-   * ```ts
-   * import { load } from '@norviah/config';
-   * import type { JsonValue } from 'type-fest';
-   *
-   * interface Config {
-   *   token: string;
-   *   prefix: string;
-   * }
-   *
-   * const config: Config = load<Config>(
-   *   {
-   *     token: {
-   *       type: function (value: JsonValue): string | null {
-   *         return typeof value === 'string' ? value : null;
-   *       }
-   *     },
-   *
-   *     prefix: {
-   *       type: function (value: JsonValue): string | null {
-   *         return typeof value === 'string' ? value : null;
-   *       }
-   *     }
-   *   },
-   *   { path: "./config.json" }
-   * );
-   *
-   * console.log(config);
-   * ```
-   *
-   * This example implements a custom constructor function for the two keys, the
-   * functions ensures that the value set for the key is a string.
-   *
-   * As you can see, if you have multiple keys that are a primitive type, it can
-   * be tedious to implement a constructor for each key. Instead, you can opt to
-   * use a string to represent the value of the key. Here's how we can do that:
-   *
-   * ```ts
-   * const config: Config = load<Config>(
-   *   {
-   *     token: {
-   *       type: "string",
-   *     },
-   *
-   *     prefix: {
-   *       type: "string",
-   *     }
-   *   },
-   *   { path: "./config.json" }
-   * );
-   * ```
-   *
-   * This is equivalent to the previous example, but it's much more consise.
-   * Strings are used to *only* represent primitive types, so if you want to
-   * represent anything else, you must use a constructor.
-   *
-   * These examples are rather simple, the main benefit of `type` comes from
-   * defining keys with complex types. As constructors are manually defined, you
-   * can implement any logic you want to form the value of the key.
-   *
-   * For example, let's say we want to define a configuraiton object for a
-   * command-line application that will generate and build *something* based off
-   * of an input file. The config will have two keys, `input` and `output`, with
-   * `input` being a custom type. Here's how we can implement this:
-   *
-   * ```ts
-   * import { existsSync, statSync } from 'fs';
-   * import { baseName } from 'path';
-   * import { load } from '@norviah/config';
-   *
-   * import type { Stats } from 'fs';
-   * import type { JsonValue } from 'type-fest';
-   *
-   * interface File {
-   *   path: string;
-   *   fullName: string;
-   *   info: Stats;
-   * }
-   *
-   * interface Config {
-   *   input: File;
-   *   output: string;
-   * }
-   *
-   * const config: Config = load<Config>(
-   *   {
-   *     input: {
-   *       type: function (value: JsonValue): File | null {
-   *         if (typeof value !== 'string') {
-   *           return null;
-   *         } else if (!existsSync(value) || !statSync(value).isDirectory() ) {
-   *           return null;
-   *         }
-   *
-   *         return { path: value, fullName: baseName(value), info: statSync(value) };
-   *       }
-   *     }.
-   *
-   *     output: {
-   *       type: 'string',
-   *     }
-   *   },
-   *   { path: './config.json' },
-   * );
-   * ```
-   *
-   * In this example, we are using a custom constructor to parse the value of
-   * the `input` key into the custom `File` type, the constructor ensures that
-   * the file exists and is a directory.
-   *
-   * Note how the constructor function is used to parse a JSON value into a
-   * non-native JavaScript type. This is the main benefit of using a constructor
-   * function, and it is also why it is recommended to use a custom constructor
-   * than a built-in constructor, such as `String` or `Number`.
+   * As this method is essentially a wrapper around the `Parse` method, please
+   * refer to the documentation for the <code>{@link Config.Parse}</code> method
+   * for more information and examples.
+   * @template T The desired structure to parse the JSON object into.
+   * @param structure The structure that defines each key within `T`.
+   * @param options The options to use when importing the JSON object.
+   * @returns An instance of `T` with the values parsed from the JSON object.
    */
-  public static Import<T extends Record<string, any>, E extends boolean | undefined = undefined>(structure: Structure<T>, options: Options<E>): E extends true ? T : T & Record<string, any> {
-    return Config.Parse<T>({ structure: structure, json: read(options.path) });
+  public static Import<T extends Record<string, any>>(structure: Structure<T>, options: Options): T {
+    return Config.Parse<T>({ structure, json: read(options.path), enforce: options.enforce } as ParsingOptions<T>);
   }
 }
-
-interface Confi {
-  prefix: string;
-  parent: {
-    child: {
-      subchild: {
-        subsubchild: string;
-      };
-    };
-  };
-}
-
-const c = Config.Parse<Confi, true>({
-  structure: {
-    prefix: 'string',
-    parent: {
-      child: {
-        subchild: {
-          subsubchild: 'string',
-        },
-      },
-    },
-  },
-
-  json: {
-    prefix: 'D',
-    parent: {
-      child: {
-        subchild: {
-          subsubchild: '',
-        },
-      },
-    },
-  },
-
-  enforce: true,
-});
-
-// const config = Config.Import<Structure<Config>>(
-//   {
-//     prefix: {
-//       type: 'string',
-//     },
-//   },
-//   {
-//     path: './config.json',
-//   }
-// );

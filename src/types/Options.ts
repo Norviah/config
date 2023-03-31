@@ -1,4 +1,4 @@
-interface BaseOptions {
+export interface Options {
   /**
    * The path to the JSON file.
    *
@@ -7,9 +7,10 @@ interface BaseOptions {
   path: string;
 
   /**
+   * Whether if the JSON object should be enforced.
    *
+   * If set, the parser will throw an error if the JSON object contains any
+   * keys that are not defined in the desired interface.
    */
-  enforce?: boolean | undefined;
+  enforce?: boolean;
 }
-
-export type Options<E extends boolean | undefined = undefined> = E extends undefined ? BaseOptions & { enforce?: undefined } : BaseOptions & { enforce: E };
