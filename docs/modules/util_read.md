@@ -33,4 +33,4 @@ The JSON object imported from the file.
 
 #### Defined in
 
-[src/util/read.ts:15](https://github.com/norviah/config/blob/a09ff28/src/util/read.ts#L15)
+[src/util/read.ts:15](https://github.com/norviah/config/blob/069aa2f/src/util/read.ts#L15)

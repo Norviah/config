@@ -49,14 +49,14 @@ Initializes a new `ConfigError` instance.
 
 | Name | Type |
 | :------ | :------ |
-| `T` | extends ``"JSON_NOT_FOUND"`` \| ``"NON_JSON_FILE"`` \| ``"INVALID_JSON"`` \| ``"INVALID_TYPE"`` \| ``"REQUIRED_KEY"`` \| ``"UNKNOWN_KEY"`` |
+| `T` | extends ``"JSON_NOT_FOUND"`` \| ``"NON_JSON_FILE"`` \| ``"INVALID_JSON"`` \| ``"INVALID_TYPE"`` \| ``"REQUIRED_KEY"`` \| ``"UNKNOWN_KEY"`` \| ``"INVALID_PARENT_TYPE"`` |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
 | `code` | `T` | The code for the error. |
-| `args` | { `INVALID_JSON`: (`path`: `string`) => `string` ; `INVALID_TYPE`: (`key`: `string`, `type`: `string`) => `string` ; `JSON_NOT_FOUND`: (`path`: `string`) => `string` ; `NON_JSON_FILE`: (`path`: `string`) => `string` ; `REQUIRED_KEY`: (`key`: `string`, `type`: `string`) => `string` ; `UNKNOWN_KEY`: (`key`: `string`) => `string`  }[`T`] extends (...`args`: `P`) => `any` ? `P` : `undefined` | Any arguments to pass to the error code. |
+| `args` | { `INVALID_JSON`: (`path`: `string`) => `string` ; `INVALID_PARENT_TYPE`: (`key`: `string`) => `string` ; `INVALID_TYPE`: (`key`: `string`, `type`: `string`) => `string` ; `JSON_NOT_FOUND`: (`path`: `string`) => `string` ; `NON_JSON_FILE`: (`path`: `string`) => `string` ; `REQUIRED_KEY`: (`key`: `string`, `type`: `string`) => `string` ; `UNKNOWN_KEY`: (`key`: `string`) => `string`  }[`T`] extends (...`args`: `P`) => `any` ? `P` : `undefined` | Any arguments to pass to the error code. |
 
 #### Overrides
 
@@ -64,13 +64,13 @@ Error.constructor
 
 #### Defined in
 
-[src/structs/ConfigError.ts:120](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L120)
+[src/structs/ConfigError.ts:134](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L134)
 
 ## Properties
 
 ### args
 
-• **args**: { `INVALID_JSON`: (`path`: `string`) => `string` ; `INVALID_TYPE`: (`key`: `string`, `type`: `string`) => `string` ; `JSON_NOT_FOUND`: (`path`: `string`) => `string` ; `NON_JSON_FILE`: (`path`: `string`) => `string` ; `REQUIRED_KEY`: (`key`: `string`, `type`: `string`) => `string` ; `UNKNOWN_KEY`: (`key`: `string`) => `string`  }[`T`] extends (...`args`: `P`) => `any` ? `P` : `undefined`
+• **args**: { `INVALID_JSON`: (`path`: `string`) => `string` ; `INVALID_PARENT_TYPE`: (`key`: `string`) => `string` ; `INVALID_TYPE`: (`key`: `string`, `type`: `string`) => `string` ; `JSON_NOT_FOUND`: (`path`: `string`) => `string` ; `NON_JSON_FILE`: (`path`: `string`) => `string` ; `REQUIRED_KEY`: (`key`: `string`, `type`: `string`) => `string` ; `UNKNOWN_KEY`: (`key`: `string`) => `string`  }[`T`] extends (...`args`: `P`) => `any` ? `P` : `undefined`
 
 Arguments passed to the error code.
 
@@ -82,7 +82,7 @@ code may require arguments to be passed to it.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:113](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L113)
+[src/structs/ConfigError.ts:127](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L127)
 
 ___
 
@@ -97,7 +97,7 @@ occurred, which can be used to handle the error in a specific way.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:102](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L102)
+[src/structs/ConfigError.ts:116](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L116)
 
 ___
 
@@ -238,7 +238,7 @@ Whether if the error is of the specified type.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:152](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L152)
+[src/structs/ConfigError.ts:166](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L166)
 
 ___
 

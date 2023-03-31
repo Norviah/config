@@ -20,7 +20,7 @@ Represents primitive types that can be used to represent a key.
 
 #### Defined in
 
-[src/types/Primitive.ts:27](https://github.com/norviah/config/blob/a09ff28/src/types/Primitive.ts#L27)
+[src/types/Primitive.ts:27](https://github.com/norviah/config/blob/069aa2f/src/types/Primitive.ts#L27)
 
 ___
 
@@ -38,7 +38,7 @@ Converts a type to its corresponding `typeof` value.
 
 #### Defined in
 
-[src/types/Primitive.ts:33](https://github.com/norviah/config/blob/a09ff28/src/types/Primitive.ts#L33)
+[src/types/Primitive.ts:33](https://github.com/norviah/config/blob/069aa2f/src/types/Primitive.ts#L33)
 
 ___
 
@@ -75,4 +75,4 @@ be represented in JSON.
 
 #### Defined in
 
-[src/types/Primitive.ts:22](https://github.com/norviah/config/blob/a09ff28/src/types/Primitive.ts#L22)
+[src/types/Primitive.ts:22](https://github.com/norviah/config/blob/069aa2f/src/types/Primitive.ts#L22)

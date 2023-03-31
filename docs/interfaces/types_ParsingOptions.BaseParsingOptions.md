@@ -27,7 +27,7 @@
 
 #### Defined in
 
-[src/types/ParsingOptions.ts:25](https://github.com/norviah/config/blob/a09ff28/src/types/ParsingOptions.ts#L25)
+[src/types/ParsingOptions.ts:25](https://github.com/norviah/config/blob/069aa2f/src/types/ParsingOptions.ts#L25)
 
 ___
 
@@ -37,7 +37,7 @@ ___
 
 #### Defined in
 
-[src/types/ParsingOptions.ts:15](https://github.com/norviah/config/blob/a09ff28/src/types/ParsingOptions.ts#L15)
+[src/types/ParsingOptions.ts:15](https://github.com/norviah/config/blob/069aa2f/src/types/ParsingOptions.ts#L15)
 
 ___
 
@@ -47,7 +47,7 @@ ___
 
 #### Defined in
 
-[src/types/ParsingOptions.ts:20](https://github.com/norviah/config/blob/a09ff28/src/types/ParsingOptions.ts#L20)
+[src/types/ParsingOptions.ts:20](https://github.com/norviah/config/blob/069aa2f/src/types/ParsingOptions.ts#L20)
 
 ___
 
@@ -57,4 +57,4 @@ ___
 
 #### Defined in
 
-[src/types/ParsingOptions.ts:10](https://github.com/norviah/config/blob/a09ff28/src/types/ParsingOptions.ts#L10)
+[src/types/ParsingOptions.ts:10](https://github.com/norviah/config/blob/069aa2f/src/types/ParsingOptions.ts#L10)
