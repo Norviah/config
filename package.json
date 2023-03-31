@@ -1,6 +1,6 @@
 {
   "name": "@norviah/config",
-  "version": "4.0.0",
+  "version": "4.1.0",
   "description": "Manage JSON configuration files with type safety",
   "main": "lib/index.js",
   "types": "lib/index.d.ts",

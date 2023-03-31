@@ -1,4 +1,11 @@
 
+## [4.1.0](https://github.com/norviah/config/compare/v4.0.0...v4.1.0) (2023-03-31)
+
+
+### Features
+
+* export options for parsing ([fdc0d23](https://github.com/norviah/config/commit/fdc0d23c7a84e2a05216082b54c12d31be09108f))
+
 ## [4.0.0](https://github.com/norviah/config/compare/v3.0.0...v4.0.0) (2023-03-31)
 
 
