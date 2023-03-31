@@ -1,3 +1,26 @@
+
+## [4.0.0](https://github.com/norviah/config/compare/v3.0.0...v4.0.0) (2023-03-31)
+
+
+### Features
+
+* extract the parsing and validating logic into a class ([a6e8884](https://github.com/norviah/config/commit/a6e88849312dcf46fbaf2a4666acdfadf7af8ff1))
+* implement the error system into a flexible class ([d06f358](https://github.com/norviah/config/commit/d06f3589858b03df8265b13fd288106ee59ed207))
+
+
+### Build System
+
+* add a config file for typedoc ([b14a74e](https://github.com/norviah/config/commit/b14a74e2e44be4b46e387c89dfeaef0aecb5ed3b))
+* remove bumprc in favor for standard-version ([740b7ee](https://github.com/norviah/config/commit/740b7ee7af0835263ca8ece9ee57df9a6c509347))
+* update prettier and eslint rules ([1174106](https://github.com/norviah/config/commit/1174106c9b46649d4668c3aa9c6818fbf3e381d9))
+* update tsconfig ([0330e06](https://github.com/norviah/config/commit/0330e06645d29fbbf39f1f51c831dfee7609436c))
+
+
+### Refactor
+
+* refactor codebase ([1f4039b](https://github.com/norviah/config/commit/1f4039b79a64b7fa8f4db906ac677e6d91afb57a))
+* refactor project ([069aa2f](https://github.com/norviah/config/commit/069aa2ff150d3464b22ac16a7f11c392b0e85d9e))
+
 ## 3.0.0 (2021-07-31)
 
 * docs: generate documentation ([407a1c3](https://github.com/Norviah/config/commit/407a1c3))
@@ -59,6 +82,3 @@
 ## 1.0.0 (2020-11-15)
 
 * init: initial release ([e908d5f](https://github.com/Norviah/config/commit/e908d5f))
-
-
-
