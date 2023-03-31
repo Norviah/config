@@ -27,4 +27,4 @@
 
 #### Defined in
 
-[src/types/ParsingOptions.ts:28](https://github.com/norviah/config/blob/a09ff28/src/types/ParsingOptions.ts#L28)
+[src/types/ParsingOptions.ts:28](https://github.com/norviah/config/blob/069aa2f/src/types/ParsingOptions.ts#L28)

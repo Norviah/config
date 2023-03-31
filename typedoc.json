@@ -6,6 +6,8 @@
   ],
   "entryPoints": [
     "./src/index.ts",
-    "./src/**/*.ts"
+    "./src/types/*.ts",
+    "./src/structs/*.ts",
+    "./src/util/*.ts",
   ]
 }

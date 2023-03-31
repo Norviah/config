@@ -14,6 +14,7 @@
 
 - [Cast](structs_Config.Config.md#cast)
 - [Ensure](structs_Config.Config.md#ensure)
+- [Helper](structs_Config.Config.md#helper)
 - [Import](structs_Config.Config.md#import)
 - [IsKeyOptions](structs_Config.Config.md#iskeyoptions)
 - [Parse](structs_Config.Config.md#parse)
@@ -39,9 +40,9 @@ value.
 
 #### Type parameters
 
-| Name |
-| :------ |
-| `T` |
+| Name | Description |
+| :------ | :------ |
+| `T` | The desired type of the value. |
 
 #### Parameters
 
@@ -58,7 +59,7 @@ An object representing the result of the cast.
 
 #### Defined in
 
-[src/structs/Config.ts:92](https://github.com/norviah/config/blob/a09ff28/src/structs/Config.ts#L92)
+[src/structs/Config.ts:98](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L98)
 
 ___
 
@@ -66,195 +67,129 @@ ___
 
 ▸ `Static` **Ensure**<`T`\>(`value`, `type`): value is TypeMappings[T]
 
-Ensures that the provided value is an instance of the specified type.
+Ensures that the provided value is an instance of the specified
+_primitive_, type.
 
-`Ensure` is a type guard that ensures the provided value is an instance of
-the specified type, implementing an `instanceof` check to ensure this. As
-the method is a type guard, it will inform TypeScript, allowing for
-type-safety when accessing the value.
+`Ensure` is a type guard that ensures the provided value is of the
+specified primitive type, implementing an `instanceof` check to ensure
+this. As this method implements a type guard, it can be used to narrow
+the type of the provided value.
 
-**`Example`**
-
-```ts
-const variable: unknown = 'sample text';
-
-if (Parser.Ensure(variable, ['string'])) {
-  /* in this scope, `variable` is ensured to be of type `string` */
-}
-```
+Note that this method only considers primitive types, and will not
+consider any other type.
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends keyof [`TypeMappings`](../modules/types_Primitive.md#typemappings) |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `T` | extends keyof [`TypeMappings`](../modules/types_Primitive.md#typemappings) | The primitive type(s) to check against. |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `value` | `unknown` | The value to check. |
-| `type` | `T`[] | The type to check against. |
+| `value` | `unknown` | The value to check |
+| `type` | `T` \| `T`[] | The type to check against |
 
 #### Returns
 
 value is TypeMappings[T]
 
-Whether the value is an instance of the specified type.
+`true` if the value is an instance of the specified type.
+```ts
+const variable: unknown = 'Hello, world!';
+
+if (Config.Ensure(variable, ['string', 'boolean'])) {
+  /* in this scope, `variable` is ensured to be a string or a boolean */
+}
+```
 
 #### Defined in
 
-[src/structs/Config.ts:77](https://github.com/norviah/config/blob/a09ff28/src/structs/Config.ts#L77)
+[src/structs/Config.ts:49](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L49)
 
 ___
 
-### Import
+### Helper
 
-▸ `Static` **Import**<`T`, `E`\>(`structure`, `options`): `E` extends ``true`` ? `T` : `T` & `Record`<`string`, `any`\>
+▸ `Static` `Private` **Helper**<`T`, `E`\>(`options`): `T`
 
-Imports a JSON object from a file and parses it into an instance of `T`.
+A helper method for parsing a JSON object into an instance of `T`.
+
+This method is used internally by the `Parse` method to implement the
+logic of recursively parsing a JSON object into an instance of `T`. During
+the parsing process, for a given key, this method will determine if the key
+represents a recursive structure, or if the key represents an actual key to
+be parsed.
+
+If the key represents a recursive structure, this method will recursively
+call the `Parse` method to parse the value of the key into an instance of
+the specified structure.
 
 #### Type parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `T` | extends `Record`<`string`, `any`\> | The desired type to parse the JSON object into. |
+| `T` | extends `Record`<`string`, `any`\> | The type of the JSON object. |
 | `E` | extends `undefined` \| `boolean` = `undefined` | - |
 
 #### Parameters
 
 | Name | Type | Description |
 | :------ | :------ | :------ |
-| `structure` | [`Structure`](../modules/types_Structure.md#structure)<`T`\> | Defines the structure for each key in the JSON object. |
-| `options` | [`Options`](../modules/types_Options.md#options)<`E`\> | Options for the loader. |
+| `options` | [`ParsingOptions`](../modules/types_ParsingOptions.md#parsingoptions)<`T`, `E`\> & { `key`: `Extract`<keyof `T`, `string`\>  } | Options for parsing. |
 
 #### Returns
 
-`E` extends ``true`` ? `T` : `T` & `Record`<`string`, `any`\>
+`T`
 
-An instance of `T` with the values from the JSON object.
-As a basic example, let's say we want to define a configuration object for
-a Discord bot. The config will have two keys, `token` and `prefix`, both of
-which are the primitive type, `string`.
-
-Here's how we can implement this:
-```ts
-import { load } from '@norviah/config';
-import type { JsonValue } from 'type-fest';
-
-interface Config {
-  token: string;
-  prefix: string;
-}
-
-const config: Config = load<Config>(
-  {
-    token: {
-      type: function (value: JsonValue): string | null {
-        return typeof value === 'string' ? value : null;
-      }
-    },
-
-    prefix: {
-      type: function (value: JsonValue): string | null {
-        return typeof value === 'string' ? value : null;
-      }
-    }
-  },
-  { path: "./config.json" }
-);
-
-console.log(config);
-```
-
-This example implements a custom constructor function for the two keys, the
-functions ensures that the value set for the key is a string.
-
-As you can see, if you have multiple keys that are a primitive type, it can
-be tedious to implement a constructor for each key. Instead, you can opt to
-use a string to represent the value of the key. Here's how we can do that:
-
-```ts
-const config: Config = load<Config>(
-  {
-    token: {
-      type: "string",
-    },
-
-    prefix: {
-      type: "string",
-    }
-  },
-  { path: "./config.json" }
-);
-```
-
-This is equivalent to the previous example, but it's much more consise.
-Strings are used to *only* represent primitive types, so if you want to
-represent anything else, you must use a constructor.
-
-These examples are rather simple, the main benefit of `type` comes from
-defining keys with complex types. As constructors are manually defined, you
-can implement any logic you want to form the value of the key.
-
-For example, let's say we want to define a configuraiton object for a
-command-line application that will generate and build *something* based off
-of an input file. The config will have two keys, `input` and `output`, with
-`input` being a custom type. Here's how we can implement this:
-
-```ts
-import { existsSync, statSync } from 'fs';
-import { baseName } from 'path';
-import { load } from '@norviah/config';
-
-import type { Stats } from 'fs';
-import type { JsonValue } from 'type-fest';
-
-interface File {
-  path: string;
-  fullName: string;
-  info: Stats;
-}
-
-interface Config {
-  input: File;
-  output: string;
-}
-
-const config: Config = load<Config>(
-  {
-    input: {
-      type: function (value: JsonValue): File | null {
-        if (typeof value !== 'string') {
-          return null;
-        } else if (!existsSync(value) || !statSync(value).isDirectory() ) {
-          return null;
-        }
-
-        return { path: value, fullName: baseName(value), info: statSync(value) };
-      }
-    }.
-
-    output: {
-      type: 'string',
-    }
-  },
-  { path: './config.json' },
-);
-```
-
-In this example, we are using a custom constructor to parse the value of
-the `input` key into the custom `File` type, the constructor ensures that
-the file exists and is a directory.
-
-Note how the constructor function is used to parse a JSON value into a
-non-native JavaScript type. This is the main benefit of using a constructor
-function, and it is also why it is recommended to use a custom constructor
-than a built-in constructor, such as `String` or `Number`.
+The parsed value of the key.
 
 #### Defined in
 
-[src/structs/Config.ts:412](https://github.com/norviah/config/blob/a09ff28/src/structs/Config.ts#L412)
+[src/structs/Config.ts:172](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L172)
+
+___
+
+### Import
+
+▸ `Static` **Import**<`T`, `E`\>(`structure`, `options`): [`ParsedResults`](../modules/types_ParsedResults.md#parsedresults)<`T`, `E`\>
+
+Imports a JSON object from the specified path and parses it into an
+instance of `T`.
+
+`Import` will attempt to read the JSON object from the specified path and
+pass it to the `Parse` method, providing the necessary arguments to the
+method. Once parsed, the resulting object will be an instance of `T` with
+the values parsed from the JSON object.
+
+As this method is essentially a wrapper around the `Parse` method, please
+refer to the documentation for the <code>[Parse](structs_Config.Config.md#parse)</code> method
+for more information and examples.
+
+#### Type parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `T` | extends `Record`<`string`, `any`\> | The desired structure to parse the JSON object into. |
+| `E` | extends `undefined` \| `boolean` = `undefined` | Whether if the program should enforce only explicitly defined properties in the structure. |
+
+#### Parameters
+
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `structure` | [`Structure`](../modules/types_Structure.md#structure)<`T`\> | The structure that defines each key within `T`. |
+| `options` | [`Options`](../modules/types_Options.md#options)<`E`\> | The options to use when importing the JSON object. |
+
+#### Returns
+
+[`ParsedResults`](../modules/types_ParsedResults.md#parsedresults)<`T`, `E`\>
+
+An instance of `T` with the values parsed from the JSON object.
+
+#### Defined in
+
+[src/structs/Config.ts:427](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L427)
 
 ___
 
@@ -294,28 +229,39 @@ Whether the value represents options for the key.
 
 #### Defined in
 
-[src/structs/Config.ts:40](https://github.com/norviah/config/blob/a09ff28/src/structs/Config.ts#L40)
+[src/structs/Config.ts:68](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L68)
 
 ___
 
 ### Parse
 
-▸ `Static` **Parse**<`T`, `E`\>(`options`): `E` extends ``true`` ? `T` : `Record`<`string`, `any`\> \| `T`
+▸ `Static` **Parse**<`T`, `E`\>(`options`): [`ParsedResults`](../modules/types_ParsedResults.md#parsedresults)<`T`, `E`\>
 
 Parses the provided JSON object into an instance of `T`.
 
-`Parse` is the method that parses the provided JSON object into an instance
-of the desired type. The method recursively iterates through the JSON
-object in tandem with the defined structure, attempting to parse each key's
-value into the type specified by the structure.
+The main entry point for the library, `Parse` will attempt to parse the
+provided JSON object into an instance of the specified interface. The
+method will recursively iterate through the JSON object in tandem with the
+define structure, attempting to parse each key's value into the type
+specified in the structure.
+
+When parsing a JSON object, you **must** provide a structure object for the
+desired interface, this object will define how each key within the
+interface should be parsed along with any additional options.
+
+By default, `Parse` will allow any key that isn't explicitly defined in
+the structure to be parsed into the resulting object, constricting the
+type of the object to `T & Record<string, unknown>`. To enforce that only
+explicitly defined keys are parsed, set the `enforce` option to `true`.
 
 **`Example`**
 
 In order to properly call the `Parse` method, we must first define an
-interface to base the desired result on.
+interface to base the desired result on. As a basic example, we'll define
+a simple interface for a configuration file of a Discord bot.
 
 ```ts
-interface Config {
+interface BotConfig {
   id: string;
   token: string;
   settings: {
@@ -324,43 +270,96 @@ interface Config {
 }
 ```
 
-Once we have defined the interface, we can call the `Parse`, providing an
-object to define the desired structure for each key within the interface,
-recursively.
-
-Note that when marking a key as optional, the key must be marked as
-optional, rather than the parent object as a whole. Objects that are marked
-as optional are ignored and will be treated as if the values are required.
+Once we have defined the interface, we can then call the `Parse` method,
+providing a structure object to define how each key within the interface
+should be parsed.
 
 ```ts
-const parsed: Config = Parser.Parse<Config>(
+const config: Config = Config.Parse<BotConfig>(
   {
-    id: 'string',
-    token: 'string',
+    id: {
+      type: 'string',
+    },
+    token: {
+      type: 'string',
+    },
     settings: {
       mentionAll: {
         type: 'boolean',
-        optional: true,
+        optional: true
       },
     },
   },
 
   {
-    /* the prvovided JSON object */
+    /* the JSON object */
   }
 );
 ```
 
-Once parsed, you can access the parsed object as an instance of `Config`,
-assuming that no errors occurred. The values are extracted from the
-provided JSON object.
+If the JSON object is valid and no errors are encountered, the `Parse`
+method will return an instance of the specified interface. From there, we
+can access the properties of the object as we would normally.
+
+> Note: If you wish to mark something as optional, you **must** only mark
+> a key as optional, not a parent key. Parents that are marked as optional
+> will not be treated as optional, they will be treated as a required
+> property.
+
+As previously mentioned, the above example is a basic example of how to
+use the `Parse` method. The potential of the library lies when you provide
+a custom constructor for a key, allowing you to implement the logic of how
+to parse the value of a key.
+
+For this more advanced example, we'll be creating a configuration file for
+a build script which will do _something_ with a file as an input. The
+configuration file will allow the user to specify the path to the input
+file, here is how we can implement this.
+
+```ts
+import { existsSync, statSync } from 'fs';
+
+import type { Stats } from 'fs';
+import type { JsonValue } from 'type-fest';
+import type { Structure } from '@norviah/config';
+
+interface BuildConfig {
+  input: Stats;
+}
+
+const structure: Structure<BuildConfig> = {
+  input: {
+    type: function (value: JsonValue): Stats | null {
+      if (typeof value !== 'string') {
+        return null;
+      } else if (!existsSync(value) || !statSync(value).isFile()) {
+        return null;
+      }
+
+      return statSync(value);
+    },
+  },
+};
+
+const config = Config.Parse<BuildConfig>(structure, { /* ... */ }});
+```
+
+In the above example, we've defined a custom constructor for the `input`
+key, which will attempt to parse the value of the key into a `Stats`
+instance. If the value is not a string, or the path does not exist, or the
+path is not a file, the constructor will return `null`, which will cause
+the `Parse` method to throw an error.
+
+Here is the main potential of the library, you can define a custom
+constructor which can cast the value of a key into any type you wish,
+using any logic you wish, such as an API call.
 
 #### Type parameters
 
-| Name | Type |
-| :------ | :------ |
-| `T` | extends `Record`<`string`, `any`\> |
-| `E` | extends `undefined` \| `boolean` = `undefined` |
+| Name | Type | Description |
+| :------ | :------ | :------ |
+| `T` | extends `Record`<`string`, `any`\> | The desired structure to parse the JSON object into. |
+| `E` | extends `undefined` \| `boolean` = `undefined` | Whether if the program should enforce only explicitly defined properties in the structure. |
 
 #### Parameters
 
@@ -370,10 +369,11 @@ provided JSON object.
 
 #### Returns
 
-`E` extends ``true`` ? `T` : `Record`<`string`, `any`\> \| `T`
+[`ParsedResults`](../modules/types_ParsedResults.md#parsedresults)<`T`, `E`\>
 
-An instance of `T` parsed from the provided JSON object.
+An instance of `T` with the values parsed from the provided JSON
+object.
 
 #### Defined in
 
-[src/structs/Config.ts:207](https://github.com/norviah/config/blob/a09ff28/src/structs/Config.ts#L207)
+[src/structs/Config.ts:355](https://github.com/norviah/config/blob/069aa2f/src/structs/Config.ts#L355)

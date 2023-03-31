@@ -4,6 +4,10 @@
 
 ## Table of contents
 
+### Interfaces
+
+- [BaseOptions](../interfaces/types_Options.BaseOptions.md)
+
 ### Type Aliases
 
 - [Options](types_Options.md#options)
@@ -12,7 +16,7 @@
 
 ### Options
 
-Ƭ **Options**<`E`\>: `E` extends `undefined` ? `BaseOptions` & { `enforce?`: `undefined`  } : `BaseOptions` & { `enforce`: `E`  }
+Ƭ **Options**<`E`\>: `E` extends `undefined` ? [`BaseOptions`](../interfaces/types_Options.BaseOptions.md) & { `enforce?`: `undefined`  } : [`BaseOptions`](../interfaces/types_Options.BaseOptions.md) & { `enforce`: `E`  }
 
 #### Type parameters
 
@@ -22,4 +26,4 @@
 
 #### Defined in
 
-[src/types/Options.ts:15](https://github.com/norviah/config/blob/a09ff28/src/types/Options.ts#L15)
+[src/types/Options.ts:15](https://github.com/norviah/config/blob/069aa2f/src/types/Options.ts#L15)

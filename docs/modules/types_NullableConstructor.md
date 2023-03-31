@@ -47,4 +47,4 @@ the value cannot be parsed.
 
 #### Defined in
 
-[src/types/NullableConstructor.ts:16](https://github.com/norviah/config/blob/a09ff28/src/types/NullableConstructor.ts#L16)
+[src/types/NullableConstructor.ts:16](https://github.com/norviah/config/blob/069aa2f/src/types/NullableConstructor.ts#L16)

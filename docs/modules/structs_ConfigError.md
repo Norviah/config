@@ -27,6 +27,7 @@
 | Name | Type |
 | :------ | :------ |
 | `INVALID_JSON` | (`path`: `string`) => `string` |
+| `INVALID_PARENT_TYPE` | (`key`: `string`) => `string` |
 | `INVALID_TYPE` | (`key`: `string`, `type`: `string`) => `string` |
 | `JSON_NOT_FOUND` | (`path`: `string`) => `string` |
 | `NON_JSON_FILE` | (`path`: `string`) => `string` |
@@ -35,4 +36,4 @@
 
 #### Defined in
 
-[src/structs/ConfigError.ts:37](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L37)
+[src/structs/ConfigError.ts:42](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L42)

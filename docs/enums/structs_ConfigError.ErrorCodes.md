@@ -9,6 +9,7 @@
 ### Enumeration Members
 
 - [INVALID\_JSON](structs_ConfigError.ErrorCodes.md#invalid_json)
+- [INVALID\_PARENT\_TYPE](structs_ConfigError.ErrorCodes.md#invalid_parent_type)
 - [INVALID\_TYPE](structs_ConfigError.ErrorCodes.md#invalid_type)
 - [JSON\_NOT\_FOUND](structs_ConfigError.ErrorCodes.md#json_not_found)
 - [NON\_JSON\_FILE](structs_ConfigError.ErrorCodes.md#non_json_file)
@@ -26,7 +27,17 @@ mostly due to invalid JSON syntax.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:17](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L17)
+[src/structs/ConfigError.ts:17](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L17)
+
+___
+
+### INVALID\_PARENT\_TYPE
+
+• **INVALID\_PARENT\_TYPE** = ``"INVALID_PARENT_TYPE"``
+
+#### Defined in
+
+[src/structs/ConfigError.ts:39](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L39)
 
 ___
 
@@ -39,7 +50,7 @@ invalid.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:23](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L23)
+[src/structs/ConfigError.ts:23](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L23)
 
 ___
 
@@ -51,7 +62,7 @@ Represents the event where the JSON config file to import is missing.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:5](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L5)
+[src/structs/ConfigError.ts:5](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L5)
 
 ___
 
@@ -64,7 +75,7 @@ file.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:11](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L11)
+[src/structs/ConfigError.ts:11](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L11)
 
 ___
 
@@ -77,7 +88,7 @@ while being required.
 
 #### Defined in
 
-[src/structs/ConfigError.ts:29](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L29)
+[src/structs/ConfigError.ts:29](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L29)
 
 ___
 
@@ -87,4 +98,4 @@ ___
 
 #### Defined in
 
-[src/structs/ConfigError.ts:34](https://github.com/norviah/config/blob/a09ff28/src/structs/ConfigError.ts#L34)
+[src/structs/ConfigError.ts:34](https://github.com/norviah/config/blob/069aa2f/src/structs/ConfigError.ts#L34)

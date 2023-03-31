@@ -1,7 +1,7 @@
 import type { NullableConstructor } from './NullableConstructor';
 import type { ToString } from './Primitive';
 
-interface BaseKeyOptions<T> {
+export interface BaseKeyOptions<T> {
   /**
    * The constructor for the key.
    *
@@ -79,7 +79,7 @@ interface BaseKeyOptions<T> {
  * `true` if the generic type `T` extends `undefined`.
  * @template T The type of the key.
  */
-type KeyOptionalOptions<T> = undefined extends T ? Pick<Required<BaseKeyOptions<T>>, 'optional'> : unknown;
+export type KeyOptionalOptions<T> = undefined extends T ? Pick<Required<BaseKeyOptions<T>>, 'optional'> : unknown;
 
 /**
  * Represents options for a key.
